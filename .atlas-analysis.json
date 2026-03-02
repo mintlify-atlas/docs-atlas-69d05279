@@ -1,0 +1,148 @@
+{
+  "projectType": "sdk-library",
+  "projectName": "Moving Icons",
+  "projectDescription": "Beautifully crafted, animated Lucide icons for Svelte 5 with zero dependencies",
+  "theme": "almond",
+  "primaryColor": "#ff6b35",
+  "lightColor": "#ff9770",
+  "darkColor": "#e85a2a",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "installation",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Usage",
+            "pages": [
+              "usage/basic-usage",
+              "usage/props",
+              "usage/animations",
+              "usage/advanced-patterns"
+            ]
+          },
+          {
+            "group": "Integration",
+            "pages": [
+              "integration/sveltekit",
+              "integration/shadcn-svelte",
+              "integration/typescript"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Components",
+            "pages": [
+              "api/icon-component",
+              "api/icon-props",
+              "api/icon-list"
+            ]
+          },
+          {
+            "group": "Types",
+            "pages": [
+              "api/types"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Community",
+        "groups": [
+          {
+            "group": "Contributing",
+            "pages": [
+              "contributing/overview",
+              "contributing/icon-guidelines",
+              "contributing/development"
+            ]
+          },
+          {
+            "group": "Resources",
+            "pages": [
+              "resources/examples",
+              "resources/changelog",
+              "resources/license"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "530+ animated Lucide icons as Svelte 5 components",
+    "Zero dependencies and fully tree-shakeable",
+    "Customizable with props (size, color, strokeWidth, animate)",
+    "Multiple installation methods (npm, shadcn-svelte, copy from website)",
+    "Interactive animations on hover or controlled programmatically",
+    "Built with vanilla CSS animations",
+    "MIT licensed and open source"
+  ],
+  "publicApiSurface": [
+    "Accessibility",
+    "Activity",
+    "Airplay",
+    "AlarmClock",
+    "AlarmClockCheck",
+    "AlarmClockOff",
+    "Archive",
+    "ArrowDown",
+    "ArrowLeft",
+    "ArrowRight",
+    "ArrowUp",
+    "Bell",
+    "BellOff",
+    "BellRing",
+    "Bookmark",
+    "Calendar",
+    "Check",
+    "ChevronDown",
+    "ChevronLeft",
+    "ChevronRight",
+    "ChevronUp",
+    "Circle",
+    "CircleCheck",
+    "Clipboard",
+    "Clock",
+    "Cloud",
+    "Cog",
+    "Copy",
+    "Download",
+    "Eye",
+    "EyeOff",
+    "File",
+    "Folder",
+    "Heart",
+    "HeartOff",
+    "Home",
+    "House",
+    "Key",
+    "Loader",
+    "Mail",
+    "Menu",
+    "MessageCircle",
+    "MessageSquare",
+    "Plus",
+    "Minus",
+    "Search",
+    "Settings",
+    "Star",
+    "StarOff",
+    "Trash",
+    "User",
+    "Users",
+    "X",
+    "IconProps (TypeScript interface)"
+  ]
+}
