@@ -1,0 +1,580 @@
+---
+title: 'TypeScript Integration'
+description: 'Complete guide to using Moving Icons with TypeScript for type-safe icon development'
+---
+
+Moving Icons is built with TypeScript and provides comprehensive type definitions for all icons and their props. This guide covers type imports, interfaces, and best practices for type-safe icon usage.
+
+## Type Definitions
+
+All Moving Icons components are fully typed with TypeScript, providing autocomplete and type checking out of the box.
+
+### IconProps Interface
+
+The core type definition for all icon props:
+
+```typescript types.ts
+export interface IconProps {
+  color?: string;
+  size?: number;
+  strokeWidth?: number;
+  animate?: boolean;
+  class?: string;
+}
+```
+
+<Info>
+  The `IconProps` interface is defined in `src/lib/icons/types.ts` in the source package.
+</Info>
+
+### Property Details
+
+<ParamField path="color" type="string" default="'currentColor'">
+  The stroke color of the icon. Accepts any valid CSS color value:
+  - Named colors: `'red'`, `'blue'`
+  - Hex: `'#ff0000'`
+  - RGB: `'rgb(255, 0, 0)'`
+  - HSL: `'hsl(0, 100%, 50%)'`
+  - CSS variables: `'var(--primary-color)'`
+</ParamField>
+
+<ParamField path="size" type="number" default="24">
+  The width and height of the icon in pixels. Common sizes:
+  - Small: `16`
+  - Medium: `20` or `24`
+  - Large: `32`
+  - Extra large: `48`
+</ParamField>
+
+<ParamField path="strokeWidth" type="number" default="2">
+  The width of the SVG stroke. Typical values:
+  - Thin: `1` or `1.5`
+  - Normal: `2`
+  - Bold: `2.5` or `3`
+</ParamField>
+
+<ParamField path="animate" type="boolean" default="false">
+  Controls whether the icon animation is active. When `true`, the icon plays its animation.
+</ParamField>
+
+<ParamField path="class" type="string" default="''">
+  Additional CSS classes to apply to the icon wrapper element.
+</ParamField>
+
+## Importing Types
+
+### From NPM Package
+
+```typescript
+import type { IconProps } from '@jis3r/icons';
+
+// Use in your component
+let props: IconProps = {
+  size: 24,
+  color: 'blue',
+  animate: false
+};
+```
+
+### From Registry Installation
+
+```typescript
+import type { IconProps } from '$lib/components/movingicons/types';
+
+// Use in custom components
+interface CustomIconProps extends IconProps {
+  variant?: 'default' | 'primary' | 'danger';
+}
+```
+
+## IconName Type
+
+Moving Icons exports a union type of all available icon names:
+
+```typescript index.ts
+export type IconName =
+  | 'accessibility'
+  | 'activity'
+  | 'airplay'
+  | 'alarm-clock-check'
+  | 'alarm-clock-off'
+  | 'alarm-clock'
+  // ... 500+ icon names
+  | 'zap-off';
+```
+
+### Using IconName for Type Safety
+
+```typescript
+import type { IconName } from '@jis3r/icons';
+
+function getIconComponent(name: IconName) {
+  // TypeScript ensures only valid icon names are accepted
+  return name;
+}
+
+// ✓ Valid
+getIconComponent('activity');
+
+// ✗ TypeScript error
+getIconComponent('invalid-icon');
+```
+
+### Dynamic Icon Loading
+
+```svelte DynamicIcon.svelte
+<script lang="ts">
+  import type { IconName } from '@jis3r/icons';
+  import * as Icons from '@jis3r/icons';
+  import { onMount } from 'svelte';
+
+  let { name, size = 24 }: { name: IconName; size?: number } = $props();
+
+  let IconComponent = $state<any>(null);
+
+  onMount(async () => {
+    // Convert kebab-case to PascalCase
+    const componentName = name
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join('');
+    
+    IconComponent = Icons[componentName as keyof typeof Icons];
+  });
+</script>
+
+{#if IconComponent}
+  <IconComponent {size} />
+{/if}
+```
+
+Usage:
+
+```svelte
+<script lang="ts">
+  import DynamicIcon from './DynamicIcon.svelte';
+</script>
+
+<DynamicIcon name="activity" size={24} />
+<DynamicIcon name="star" size={32} />
+```
+
+## Type-Safe Component Props
+
+### Using IconProps in Components
+
+```svelte IconButton.svelte
+<script lang="ts">
+  import type { IconProps } from '@jis3r/icons';
+  import type { Snippet } from 'svelte';
+
+  interface IconButtonProps {
+    icon: Snippet<[IconProps]>;
+    label: string;
+    onclick?: () => void;
+    variant?: 'default' | 'primary' | 'danger';
+  }
+
+  let {
+    icon,
+    label,
+    onclick,
+    variant = 'default'
+  }: IconButtonProps = $props();
+
+  let animate = $state(false);
+  
+  const iconProps: IconProps = {
+    size: 16,
+    animate
+  };
+</script>
+
+<button
+  {onclick}
+  class="btn {variant}"
+  onmouseenter={() => (animate = true)}
+  onmouseleave={() => (animate = false)}
+>
+  {@render icon(iconProps)}
+  <span>{label}</span>
+</button>
+```
+
+Usage:
+
+```svelte +page.svelte
+<script lang="ts">
+  import IconButton from './IconButton.svelte';
+  import { Trash, Send } from '@jis3r/icons';
+</script>
+
+<IconButton label="Delete" variant="danger">
+  {#snippet icon(props)}
+    <Trash {...props} />
+  {/snippet}
+</IconButton>
+
+<IconButton label="Send" variant="primary">
+  {#snippet icon(props)}
+    <Send {...props} />
+  {/snippet}
+</IconButton>
+```
+
+## Extending IconProps
+
+### Creating Custom Interfaces
+
+```typescript types.ts
+import type { IconProps } from '@jis3r/icons';
+
+// Add badge support
+export interface BadgedIconProps extends IconProps {
+  badge?: number;
+  badgeColor?: string;
+}
+
+// Add rotation support
+export interface RotatableIconProps extends IconProps {
+  rotation?: 0 | 90 | 180 | 270;
+}
+
+// Add theme variant
+export interface ThemedIconProps extends IconProps {
+  variant?: 'primary' | 'secondary' | 'accent' | 'muted';
+}
+```
+
+### Using Extended Props
+
+```svelte BadgedIcon.svelte
+<script lang="ts">
+  import type { BadgedIconProps } from './types';
+  import { Bell } from '@jis3r/icons';
+
+  let {
+    badge = 0,
+    badgeColor = 'red',
+    size = 24,
+    color = 'currentColor',
+    animate = false,
+    class: className = ''
+  }: BadgedIconProps = $props();
+</script>
+
+<div class="badged-icon {className}">
+  <Bell {size} {color} {animate} />
+  {#if badge > 0}
+    <span class="badge" style="background: {badgeColor}">
+      {badge}
+    </span>
+  {/if}
+</div>
+
+<style>
+  .badged-icon {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 10px;
+    font-weight: bold;
+  }
+</style>
+```
+
+## Type Safety Examples
+
+### Enforcing Size Constraints
+
+```typescript
+import type { IconProps } from '@jis3r/icons';
+
+type IconSize = 16 | 20 | 24 | 32 | 48;
+
+interface StrictIconProps extends Omit<IconProps, 'size'> {
+  size: IconSize; // Only allow specific sizes
+}
+
+function createIconConfig(props: StrictIconProps) {
+  return props;
+}
+
+// ✓ Valid
+createIconConfig({ size: 24 });
+
+// ✗ TypeScript error
+createIconConfig({ size: 25 });
+```
+
+### Color Palette Restriction
+
+```typescript
+import type { IconProps } from '@jis3r/icons';
+
+type BrandColor = 
+  | 'var(--primary)'
+  | 'var(--secondary)'
+  | 'var(--accent)'
+  | 'var(--muted)';
+
+interface BrandedIconProps extends Omit<IconProps, 'color'> {
+  color: BrandColor;
+}
+
+function useBrandIcon(props: BrandedIconProps) {
+  return props;
+}
+
+// ✓ Valid
+useBrandIcon({ color: 'var(--primary)' });
+
+// ✗ TypeScript error
+useBrandIcon({ color: 'red' });
+```
+
+### Prop Validation Helper
+
+```typescript
+import type { IconProps } from '@jis3r/icons';
+
+function validateIconProps(props: Partial<IconProps>): IconProps {
+  return {
+    color: props.color ?? 'currentColor',
+    size: props.size ?? 24,
+    strokeWidth: props.strokeWidth ?? 2,
+    animate: props.animate ?? false,
+    class: props.class ?? ''
+  };
+}
+
+const props = validateIconProps({ size: 32, animate: true });
+// Returns complete IconProps with defaults
+```
+
+## Generic Icon Components
+
+### Type-Safe Icon Wrapper
+
+```svelte GenericIcon.svelte
+<script lang="ts" generics="T extends Record<string, any>">
+  import type { IconProps } from '@jis3r/icons';
+  import type { Component } from 'svelte';
+
+  interface Props {
+    component: Component<IconProps>;
+    props?: Partial<IconProps>;
+    wrapper?: Component<T>;
+    wrapperProps?: T;
+  }
+
+  let {
+    component: IconComponent,
+    props = {},
+    wrapper: Wrapper,
+    wrapperProps
+  }: Props = $props();
+
+  const defaultProps: IconProps = {
+    size: 24,
+    color: 'currentColor',
+    strokeWidth: 2,
+    animate: false,
+    class: ''
+  };
+
+  const iconProps = { ...defaultProps, ...props };
+</script>
+
+{#if Wrapper && wrapperProps}
+  <Wrapper {...wrapperProps}>
+    <IconComponent {...iconProps} />
+  </Wrapper>
+{:else}
+  <IconComponent {...iconProps} />
+{/if}
+```
+
+## tsconfig.json Configuration
+
+Ensure your TypeScript configuration supports Svelte 5:
+
+```json tsconfig.json
+{
+  "extends": "./.svelte-kit/tsconfig.json",
+  "compilerOptions": {
+    "strict": true,
+    "moduleResolution": "bundler",
+    "module": "ESNext",
+    "target": "ESNext",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "types": ["svelte", "vite/client"]
+  },
+  "include": [
+    "src/**/*.d.ts",
+    "src/**/*.ts",
+    "src/**/*.js",
+    "src/**/*.svelte"
+  ]
+}
+```
+
+## Type Declaration Files
+
+All Moving Icons exports include proper type declarations:
+
+```typescript index.d.ts
+export { default as Activity } from './icons/activity.svelte';
+export { default as Star } from './icons/star.svelte';
+export { default as Bell } from './icons/bell.svelte';
+// ... all 500+ icons
+
+export type { IconProps } from './icons/types.js';
+
+export type IconName =
+  | 'accessibility'
+  | 'activity'
+  // ... all icon names
+  | 'zap-off';
+```
+
+## IDE Support
+
+### VSCode IntelliSense
+
+Moving Icons provides full IntelliSense support:
+
+- **Autocomplete** for icon imports
+- **Type hints** for all props
+- **Documentation** on hover
+- **Go to definition** for types
+
+### Type Checking in Svelte Files
+
+Enable Svelte type checking in your IDE:
+
+```json .vscode/settings.json
+{
+  "svelte.plugin.svelte.compilerWarnings": {
+    "a11y-click-events-have-key-events": "ignore"
+  },
+  "svelte.plugin.svelte.defaultScriptLanguage": "ts"
+}
+```
+
+## Best Practices
+
+<Steps>
+  <Step title="Always import types">
+    Import types explicitly for better tree-shaking:
+
+    ```typescript
+    import type { IconProps, IconName } from '@jis3r/icons';
+    import { Activity } from '@jis3r/icons';
+    ```
+  </Step>
+
+  <Step title="Use strict typing">
+    Enable strict mode in `tsconfig.json` for maximum type safety:
+
+    ```json
+    {
+      "compilerOptions": {
+        "strict": true
+      }
+    }
+    ```
+  </Step>
+
+  <Step title="Create type aliases">
+    Define project-specific type aliases:
+
+    ```typescript
+    import type { IconProps } from '@jis3r/icons';
+
+    export type AppIconProps = IconProps & {
+      tooltip?: string;
+    };
+    ```
+  </Step>
+
+  <Step title="Document custom types">
+    Add JSDoc comments to custom types:
+
+    ```typescript
+    /**
+     * Extended icon props with badge support
+     * @property badge - Number to display in badge
+     * @property badgeColor - Badge background color
+     */
+    export interface BadgedIconProps extends IconProps {
+      badge?: number;
+      badgeColor?: string;
+    }
+    ```
+  </Step>
+</Steps>
+
+## Common Type Errors
+
+### Error: Cannot find module '@jis3r/icons'
+
+**Solution**: Ensure the package is installed and TypeScript can find it:
+
+```bash
+npm install @jis3r/icons
+```
+
+### Error: Property 'X' does not exist on type 'IconProps'
+
+**Solution**: Extend `IconProps` instead of modifying it:
+
+```typescript
+// ✗ Wrong
+const props: IconProps = { badge: 5 }; // Error!
+
+// ✓ Correct
+interface CustomProps extends IconProps {
+  badge?: number;
+}
+const props: CustomProps = { badge: 5 };
+```
+
+### Error: Type 'X' is not assignable to type 'IconName'
+
+**Solution**: Use a type assertion or ensure the value is a valid icon name:
+
+```typescript
+import type { IconName } from '@jis3r/icons';
+
+// ✗ Wrong
+const name = 'activity';
+const iconName: IconName = name; // Error!
+
+// ✓ Correct
+const name: IconName = 'activity';
+const iconName: IconName = name;
+
+// Or use assertion
+const dynamicName = 'activity' as IconName;
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="SvelteKit Integration" icon="puzzle-piece" href="/integration/sveltekit">
+    Learn about using icons in SvelteKit projects
+  </Card>
+  <Card title="Advanced Patterns" icon="paintbrush" href="/usage/advanced-patterns">
+    Explore customization options
+  </Card>
+</CardGroup>

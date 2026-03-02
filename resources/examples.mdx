@@ -1,0 +1,385 @@
+---
+title: Examples
+description: Real-world usage patterns and integration examples for moving icons
+icon: code
+---
+
+Discover how to use moving icons in your Svelte projects with these practical examples and common use cases.
+
+## Live Demo
+
+Explore all available icons and see them in action:
+
+<Card title="Moving Icons Demo Site" icon="globe" href="https://movingicons.dev">
+  Browse 500+ animated icons with live previews and code examples
+</Card>
+
+## Common Use Cases
+
+### Buttons
+
+Animate icons on button hover for enhanced interactivity:
+
+```svelte
+<script>
+  import { Send, Download, Trash } from '@jis3r/icons';
+  
+  let sendHovered = $state(false);
+  let downloadHovered = $state(false);
+  let deleteHovered = $state(false);
+</script>
+
+<button
+  class="btn-primary"
+  onmouseenter={() => (sendHovered = true)}
+  onmouseleave={() => (sendHovered = false)}
+>
+  <Send size={16} animate={sendHovered} />
+  Send Message
+</button>
+
+<button
+  class="btn-secondary"
+  onmouseenter={() => (downloadHovered = true)}
+  onmouseleave={() => (downloadHovered = false)}
+>
+  <Download size={16} animate={downloadHovered} />
+  Download
+</button>
+
+<button
+  class="btn-danger"
+  onmouseenter={() => (deleteHovered = true)}
+  onmouseleave={() => (deleteHovered = false)}
+>
+  <Trash size={16} animate={deleteHovered} />
+  Delete
+</button>
+```
+
+### Navigation
+
+Create engaging navigation menus with animated icons:
+
+```svelte
+<script>
+  import { Home, Settings, User, Bell } from '@jis3r/icons';
+  
+  let activeItem = $state('home');
+</script>
+
+<nav class="sidebar">
+  <a 
+    href="/"
+    class:active={activeItem === 'home'}
+  >
+    <Home size={20} animate={activeItem === 'home'} />
+    Home
+  </a>
+  
+  <a 
+    href="/settings"
+    class:active={activeItem === 'settings'}
+  >
+    <Settings size={20} animate={activeItem === 'settings'} />
+    Settings
+  </a>
+  
+  <a 
+    href="/profile"
+    class:active={activeItem === 'profile'}
+  >
+    <User size={20} animate={activeItem === 'profile'} />
+    Profile
+  </a>
+  
+  <a 
+    href="/notifications"
+    class:active={activeItem === 'notifications'}
+  >
+    <Bell size={20} animate={activeItem === 'notifications'} />
+    Notifications
+  </a>
+</nav>
+```
+
+### Reusable Navigation Component
+
+Use Svelte 5 snippets to create a reusable hoverable component:
+
+```svelte
+<!-- HoverableItem.svelte -->
+<script>
+  let { children, class: className = '' } = $props();
+  let isHovered = $state(false);
+</script>
+
+<div
+  class={className}
+  onmouseenter={() => (isHovered = true)}
+  onmouseleave={() => (isHovered = false)}
+>
+  {@render children(isHovered)}
+</div>
+```
+
+Use the wrapper in your navigation:
+
+```svelte
+<script>
+  import HoverableItem from './HoverableItem.svelte';
+  import { Home, Settings, FileText, Users } from '@jis3r/icons';
+</script>
+
+<nav class="flex flex-col gap-2">
+  <HoverableItem class="flex items-center gap-2 rounded p-2 hover:bg-gray-100">
+    {#snippet children(isHovered)}
+      <Home size={16} animate={isHovered} />
+      <span>Home</span>
+    {/snippet}
+  </HoverableItem>
+  
+  <HoverableItem class="flex items-center gap-2 rounded p-2 hover:bg-gray-100">
+    {#snippet children(isHovered)}
+      <Settings size={16} animate={isHovered} />
+      <span>Settings</span>
+    {/snippet}
+  </HoverableItem>
+  
+  <HoverableItem class="flex items-center gap-2 rounded p-2 hover:bg-gray-100">
+    {#snippet children(isHovered)}
+      <FileText size={16} animate={isHovered} />
+      <span>Documents</span>
+    {/snippet}
+  </HoverableItem>
+  
+  <HoverableItem class="flex items-center gap-2 rounded p-2 hover:bg-gray-100">
+    {#snippet children(isHovered)}
+      <Users size={16} animate={isHovered} />
+      <span>Team</span>
+    {/snippet}
+  </HoverableItem>
+</nav>
+```
+
+### Forms
+
+Enhance form inputs with animated icons:
+
+```svelte
+<script>
+  import { Search, Mail, Lock, Eye, EyeOff } from '@jis3r/icons';
+  
+  let searchFocused = $state(false);
+  let emailFocused = $state(false);
+  let passwordFocused = $state(false);
+  let showPassword = $state(false);
+</script>
+
+<div class="form-group">
+  <label for="search">Search</label>
+  <div class="input-wrapper">
+    <Search size={18} animate={searchFocused} />
+    <input
+      id="search"
+      type="text"
+      placeholder="Search..."
+      onfocus={() => (searchFocused = true)}
+      onblur={() => (searchFocused = false)}
+    />
+  </div>
+</div>
+
+<div class="form-group">
+  <label for="email">Email</label>
+  <div class="input-wrapper">
+    <Mail size={18} animate={emailFocused} />
+    <input
+      id="email"
+      type="email"
+      placeholder="you@example.com"
+      onfocus={() => (emailFocused = true)}
+      onblur={() => (emailFocused = false)}
+    />
+  </div>
+</div>
+
+<div class="form-group">
+  <label for="password">Password</label>
+  <div class="input-wrapper">
+    <Lock size={18} animate={passwordFocused} />
+    <input
+      id="password"
+      type={showPassword ? 'text' : 'password'}
+      placeholder="••••••••"
+      onfocus={() => (passwordFocused = true)}
+      onblur={() => (passwordFocused = false)}
+    />
+    <button
+      type="button"
+      onclick={() => (showPassword = !showPassword)}
+    >
+      {#if showPassword}
+        <EyeOff size={18} />
+      {:else}
+        <Eye size={18} />
+      {/if}
+    </button>
+  </div>
+</div>
+```
+
+### Loading States
+
+Show loading indicators with animated icons:
+
+```svelte
+<script>
+  import { Loader2, RefreshCw } from '@jis3r/icons';
+  
+  let isLoading = $state(false);
+  
+  async function fetchData() {
+    isLoading = true;
+    try {
+      // Fetch data
+      await fetch('/api/data');
+    } finally {
+      isLoading = false;
+    }
+  }
+</script>
+
+<button onclick={fetchData} disabled={isLoading}>
+  {#if isLoading}
+    <Loader2 size={16} animate={true} />
+    Loading...
+  {:else}
+    <RefreshCw size={16} />
+    Refresh
+  {/if}
+</button>
+```
+
+### Notifications & Alerts
+
+Add animated icons to notifications:
+
+```svelte
+<script>
+  import { CheckCircle, AlertCircle, Info, XCircle } from '@jis3r/icons';
+</script>
+
+<div class="notification success">
+  <CheckCircle size={20} animate={true} color="green" />
+  <span>Successfully saved!</span>
+</div>
+
+<div class="notification error">
+  <XCircle size={20} animate={true} color="red" />
+  <span>An error occurred</span>
+</div>
+
+<div class="notification warning">
+  <AlertCircle size={20} animate={true} color="orange" />
+  <span>Please review your changes</span>
+</div>
+
+<div class="notification info">
+  <Info size={20} animate={true} color="blue" />
+  <span>New features available</span>
+</div>
+```
+
+## Integration Examples
+
+### SvelteKit
+
+```svelte
+<!-- +page.svelte -->
+<script>
+  import { ArrowRight, ExternalLink } from '@jis3r/icons';
+  
+  let buttonHovered = $state(false);
+</script>
+
+<svelte:head>
+  <title>My App</title>
+</svelte:head>
+
+<main>
+  <h1>Welcome to My App</h1>
+  <a
+    href="/getting-started"
+    class="cta-button"
+    onmouseenter={() => (buttonHovered = true)}
+    onmouseleave={() => (buttonHovered = false)}
+  >
+    Get Started
+    <ArrowRight size={20} animate={buttonHovered} />
+  </a>
+</main>
+```
+
+### With Tailwind CSS
+
+```svelte
+<script>
+  import { Heart, Share2, Bookmark } from '@jis3r/icons';
+  
+  let liked = $state(false);
+  let bookmarked = $state(false);
+</script>
+
+<div class="flex gap-4">
+  <button
+    onclick={() => (liked = !liked)}
+    class="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors"
+    class:bg-red-100={liked}
+    class:text-red-600={liked}
+  >
+    <Heart size={20} animate={liked} color={liked ? 'red' : 'currentColor'} />
+    <span>{liked ? 'Liked' : 'Like'}</span>
+  </button>
+  
+  <button
+    onclick={() => (bookmarked = !bookmarked)}
+    class="flex items-center gap-2 px-4 py-2 rounded-lg transition-colors"
+    class:bg-blue-100={bookmarked}
+    class:text-blue-600={bookmarked}
+  >
+    <Bookmark size={20} animate={bookmarked} />
+    <span>{bookmarked ? 'Saved' : 'Save'}</span>
+  </button>
+  
+  <button class="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100">
+    <Share2 size={20} />
+    <span>Share</span>
+  </button>
+</div>
+```
+
+## Community Showcase
+
+We'd love to see how you're using moving icons in your projects! Share your implementations:
+
+- Tweet [@jis3r](https://twitter.com/jis3r) with your examples
+- Open a discussion on [GitHub](https://github.com/jis3r/icons/discussions)
+- Submit a PR to add your project to the showcase
+
+## More Resources
+
+<CardGroup cols={2}>
+  <Card title="Browse All Icons" icon="grid" href="https://movingicons.dev/icons">
+    Explore the complete icon collection
+  </Card>
+  <Card title="API Reference" icon="book" href="/api/icon-props">
+    View all available props and options
+  </Card>
+  <Card title="Installation" icon="download" href="/installation">
+    Learn different ways to install icons
+  </Card>
+  <Card title="Contributing" icon="heart" href="/contributing/overview">
+    Help expand the icon library
+  </Card>
+</CardGroup>

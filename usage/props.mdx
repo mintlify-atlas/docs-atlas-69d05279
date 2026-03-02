@@ -1,0 +1,334 @@
+---
+title: Props Reference
+description: Complete reference for all Moving Icons component props
+---
+
+## IconProps Interface
+
+All Moving Icons components accept the following props, defined in the `IconProps` interface:
+
+```typescript
+export interface IconProps {
+  color?: string;
+  size?: number;
+  strokeWidth?: number;
+  animate?: boolean;
+  class?: string;
+}
+```
+
+## Props Overview
+
+<ParamField path="size" type="number" default={24}>
+  Icon size in pixels. Controls both width and height of the icon.
+  
+  ```svelte
+  <Star size={16} />  <!-- 16×16px -->
+  <Star size={32} />  <!-- 32×32px -->
+  <Star size={48} />  <!-- 48×48px -->
+  ```
+</ParamField>
+
+<ParamField path="color" type="string" default="currentColor">
+  Stroke color for the icon. Accepts any valid CSS color value.
+  
+  ```svelte
+  <Star color="#ff6b00" />        <!-- Hex -->
+  <Star color="blue" />          <!-- Named color -->
+  <Star color="rgb(255, 0, 0)" />  <!-- RGB -->
+  <Star color="currentColor" />  <!-- Inherit from parent -->
+  ```
+</ParamField>
+
+<ParamField path="strokeWidth" type="number" default={2}>
+  SVG stroke width. Controls the visual weight/thickness of the icon.
+  
+  ```svelte
+  <Star strokeWidth={1} />    <!-- Thin -->
+  <Star strokeWidth={2} />    <!-- Default -->
+  <Star strokeWidth={2.5} />  <!-- Medium -->
+  <Star strokeWidth={3} />    <!-- Bold -->
+  ```
+</ParamField>
+
+<ParamField path="animate" type="boolean" default={false}>
+  Controls the animation state of the icon. When `true`, the icon plays its animation.
+  
+  ```svelte
+  <script>
+    let animate = $state(false);
+  </script>
+
+  <button 
+    onmouseenter={() => animate = true}
+    onmouseleave={() => animate = false}
+  >
+    <Bell {animate} />
+  </button>
+  ```
+  
+  <Note>
+    By default, icons animate on hover. Setting `animate` to `true` overrides the hover behavior and keeps the animation controlled by your code.
+  </Note>
+</ParamField>
+
+<ParamField path="class" type="string" default="">
+  Additional CSS classes to apply to the icon wrapper element.
+  
+  ```svelte
+  <Star class="opacity-50 hover:opacity-100" />
+  <Star class="rotate-45 transform" />
+  <Star class="transition-all duration-300" />
+  ```
+</ParamField>
+
+## Detailed Examples
+
+### Size Prop
+
+The `size` prop accepts any positive number representing pixels:
+
+<CodeGroup>
+```svelte Icon Sizes
+<script>
+  import { Activity } from '@jis3r/icons';
+</script>
+
+<!-- Common sizes -->
+<Activity size={12} />  <!-- Extra small -->
+<Activity size={16} />  <!-- Small -->
+<Activity size={20} />  <!-- Default small -->
+<Activity size={24} />  <!-- Default -->
+<Activity size={32} />  <!-- Medium -->
+<Activity size={40} />  <!-- Large -->
+<Activity size={48} />  <!-- Extra large -->
+```
+
+```svelte Responsive Sizing
+<script>
+  import { Star } from '@jis3r/icons';
+  
+  let windowWidth = $state(0);
+  
+  $effect(() => {
+    windowWidth = window.innerWidth;
+    
+    const handleResize = () => {
+      windowWidth = window.innerWidth;
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  });
+  
+  // Responsive size based on viewport
+  let iconSize = $derived(windowWidth < 768 ? 20 : 24);
+</script>
+
+<Star size={iconSize} />
+```
+</CodeGroup>
+
+### Color Prop
+
+Accepts any valid CSS color format:
+
+| Format | Example | Usage |
+|--------|---------|-------|
+| Hex | `#ff6b00` | `<Star color="#ff6b00" />` |
+| RGB | `rgb(255, 107, 0)` | `<Star color="rgb(255, 107, 0)" />` |
+| RGBA | `rgba(255, 107, 0, 0.5)` | `<Star color="rgba(255, 107, 0, 0.5)" />` |
+| HSL | `hsl(25, 100%, 50%)` | `<Star color="hsl(25, 100%, 50%)" />` |
+| Named | `orange` | `<Star color="orange" />` |
+| currentColor | `currentColor` | `<Star color="currentColor" />` |
+| CSS Variable | `var(--accent-color)` | `<Star color="var(--accent-color)" />` |
+
+<CodeGroup>
+```svelte Static Colors
+<script>
+  import { Bell, Star, Activity } from '@jis3r/icons';
+</script>
+
+<Bell color="#3b82f6" />      <!-- Blue -->
+<Star color="gold" />        <!-- Gold -->
+<Activity color="#10b981" /> <!-- Green -->
+```
+
+```svelte Dynamic Colors
+<script>
+  import { Star } from '@jis3r/icons';
+  
+  let isActive = $state(false);
+  let iconColor = $derived(isActive ? '#10b981' : '#6b7280');
+</script>
+
+<button onclick={() => isActive = !isActive}>
+  <Star color={iconColor} />
+</button>
+```
+
+```svelte Theme Integration
+<script>
+  import { Home } from '@jis3r/icons';
+</script>
+
+<!-- Using CSS variables from your theme -->
+<Home color="var(--primary-color)" />
+<Home color="var(--accent-color)" />
+<Home color="var(--muted-foreground)" />
+```
+</CodeGroup>
+
+### StrokeWidth Prop
+
+Controls the thickness of the icon strokes:
+
+```svelte
+<script>
+  import { Star } from '@jis3r/icons';
+</script>
+
+<div class="flex gap-4 items-center">
+  <div class="text-center">
+    <Star strokeWidth={1} />
+    <p class="text-xs">Thin (1)</p>
+  </div>
+  
+  <div class="text-center">
+    <Star strokeWidth={1.5} />
+    <p class="text-xs">Light (1.5)</p>
+  </div>
+  
+  <div class="text-center">
+    <Star strokeWidth={2} />
+    <p class="text-xs">Default (2)</p>
+  </div>
+  
+  <div class="text-center">
+    <Star strokeWidth={2.5} />
+    <p class="text-xs">Medium (2.5)</p>
+  </div>
+  
+  <div class="text-center">
+    <Star strokeWidth={3} />
+    <p class="text-xs">Bold (3)</p>
+  </div>
+</div>
+```
+
+<Tip>
+  Common stroke widths are 1.5, 2, and 2.5. The default value of 2 works well for most use cases.
+</Tip>
+
+### Animate Prop
+
+See the [Animations](/usage/animations) page for detailed documentation on controlling animations.
+
+```svelte
+<script>
+  import { Bell } from '@jis3r/icons';
+  
+  let animate = $state(false);
+</script>
+
+<button
+  onmouseenter={() => animate = true}
+  onmouseleave={() => animate = false}
+>
+  <Bell {animate} />
+  Notifications
+</button>
+```
+
+### Class Prop
+
+Add utility classes for styling and transitions:
+
+<CodeGroup>
+```svelte Tailwind Classes
+<script>
+  import { Star, Bell, Home } from '@jis3r/icons';
+</script>
+
+<Star class="opacity-50 hover:opacity-100 transition-opacity" />
+<Bell class="rotate-12 hover:rotate-0 transition-transform" />
+<Home class="hover:scale-110 transition-all duration-300" />
+```
+
+```svelte Custom Classes
+<script>
+  import { Activity } from '@jis3r/icons';
+</script>
+
+<Activity class="pulse-icon" />
+
+<style>
+  :global(.pulse-icon) {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+</style>
+```
+</CodeGroup>
+
+## Combining Props
+
+All props can be used together for complete customization:
+
+```svelte
+<script>
+  import { Bell } from '@jis3r/icons';
+  
+  let isHovered = $state(false);
+</script>
+
+<button
+  class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded"
+  onmouseenter={() => isHovered = true}
+  onmouseleave={() => isHovered = false}
+>
+  <Bell
+    size={20}
+    color="white"
+    strokeWidth={2.5}
+    animate={isHovered}
+    class="transition-transform duration-200"
+  />
+  <span>Notifications</span>
+</button>
+```
+
+## TypeScript Support
+
+All props are fully typed. Import the `IconProps` interface for type safety:
+
+```typescript
+import type { IconProps } from '@jis3r/icons';
+
+const iconConfig: IconProps = {
+  size: 24,
+  color: '#ff6b00',
+  strokeWidth: 2,
+  animate: false,
+  class: 'custom-icon'
+};
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Animations" icon="sparkles" href="/usage/animations">
+    Learn how to control icon animations
+  </Card>
+  <Card title="Advanced Patterns" icon="code" href="/usage/advanced-patterns">
+    Build reusable components and complex interactions
+  </Card>
+</CardGroup>

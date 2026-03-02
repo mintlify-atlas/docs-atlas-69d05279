@@ -1,0 +1,133 @@
+---
+title: 'Introduction'
+description: 'The standard for animated icons in Svelte - 530+ beautifully crafted, interaction-ready Lucide icons'
+keywords: ['svelte', 'icons', 'animated', 'lucide', 'moving icons', 'svelte 5']
+---
+
+# Moving Icons
+
+A collection of 530+ hand-crafted, interaction-ready [Lucide](https://lucide.dev) icons. Built natively for Svelte 5 with zero dependencies. Fully tree-shakeable, MIT licensed, and completely customizable.
+
+<CardGroup cols={3}>
+  <Card title="Get Started" icon="rocket" href="/installation">
+    Install Moving Icons in your Svelte project in minutes
+  </Card>
+  <Card title="Quick Start" icon="zap" href="/quickstart">
+    Learn the basics and start using animated icons
+  </Card>
+  <Card title="Browse Icons" icon="grid" href="https://movingicons.dev">
+    Explore all 530+ animated icons on the website
+  </Card>
+</CardGroup>
+
+## Why Moving Icons?
+
+Moving Icons brings delightful, purposeful animation to your Svelte applications without the complexity. Each icon is carefully crafted to enhance user experience through subtle, meaningful motion.
+
+### Key Features
+
+<AccordionGroup>
+  <Accordion title="Zero Dependencies" icon="package">
+    Built purely with Svelte 5 and vanilla CSS animations. No external animation libraries required, keeping your bundle size minimal.
+  </Accordion>
+  
+  <Accordion title="Fully Tree-Shakeable" icon="tree">
+    Import only the icons you need. Dead code elimination ensures unused icons never make it to production, optimizing your bundle size.
+  </Accordion>
+  
+  <Accordion title="Completely Customizable" icon="palette">
+    Control size, color, stroke width, and animation state with simple props. Style icons to match your design system perfectly.
+  </Accordion>
+  
+  <Accordion title="Vanilla CSS Animations" icon="sparkles">
+    All animations use pure CSS with no JavaScript runtime overhead. Smooth 60fps animations that respect user preferences like reduced motion.
+  </Accordion>
+  
+  <Accordion title="Svelte 5 Native" icon="code">
+    Built from the ground up for Svelte 5 using modern features like `$state` and `$props`. Fully typed with TypeScript support.
+  </Accordion>
+  
+  <Accordion title="MIT Licensed" icon="scale">
+    Free to use in personal and commercial projects. Use them however you want, wherever you want.
+  </Accordion>
+</AccordionGroup>
+
+## What Makes These Icons Special
+
+Moving Icons isn't just another icon library. Every icon includes thoughtfully designed animations that activate on hover or on demand:
+
+- **Purposeful Motion** - Animations enhance meaning rather than distract. A bell icon rings, a heart beats, settings rotate.
+- **Performance First** - Pure CSS animations mean no JavaScript overhead and silky smooth 60fps motion.
+- **Accessibility Aware** - Respects `prefers-reduced-motion` for users who need calmer interfaces.
+- **Developer Friendly** - Simple, predictable API with full TypeScript support and excellent tree-shaking.
+
+<Note>
+Moving Icons are based on [Lucide icons](https://lucide.dev), ensuring you get the clean, consistent design language you already know and love, now with beautiful animations.
+</Note>
+
+## Installation Options
+
+Choose the installation method that works best for your workflow:
+
+<CardGroup cols={3}>
+  <Card title="npm Package" icon="download">
+    Install the entire library via npm for maximum flexibility
+  </Card>
+  <Card title="shadcn-svelte Registry" icon="terminal">
+    Add individual icons via the shadcn CLI for better code organization
+  </Card>
+  <Card title="Copy from Website" icon="copy">
+    Download components directly from the website for quick prototyping
+  </Card>
+</CardGroup>
+
+## Quick Example
+
+Get started in seconds with this simple example:
+
+```svelte
+<script>
+  import { Activity, Star } from '@jis3r/icons';
+</script>
+
+<Activity size={32} color="orange" strokeWidth={2.5} />
+<Star size={32} color="blue" />
+```
+
+<Tip>
+All icons animate on hover by default. Pass the `animate` prop to control animation state programmatically for advanced use cases.
+</Tip>
+
+## Next Steps
+
+<Steps>
+  <Step title="Install Moving Icons">
+    Choose your preferred installation method and add Moving Icons to your project.
+    
+    [Installation Guide →](/installation)
+  </Step>
+  
+  <Step title="Learn the Basics">
+    Follow the quick start guide to learn how to use and customize icons.
+    
+    [Quick Start →](/quickstart)
+  </Step>
+  
+  <Step title="Explore Advanced Patterns">
+    Discover advanced techniques for controlling animations and building reusable components.
+    
+    [Advanced Usage →](/usage/advanced-patterns)
+  </Step>
+</Steps>
+
+## Community and Support
+
+Moving Icons is built and maintained by [@jis3r](https://twitter.com/jis3r) with inspiration from Dmytro's amazing work on animated icons.
+
+- **GitHub** - [jis3r/icons](https://github.com/jis3r/icons)
+- **Demo Site** - [movingicons.dev](https://movingicons.dev)
+- **Twitter** - [@jis3r](https://twitter.com/jis3r)
+
+<Info>
+This project is a work in progress. Feedback and contributions are always welcome as the collection continues to grow!
+</Info>

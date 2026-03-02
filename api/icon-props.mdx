@@ -1,0 +1,313 @@
+---
+title: Icon Props
+description: Complete reference for all icon component properties
+icon: sliders
+---
+
+## Overview
+
+All Moving Icons accept the same set of props, defined by the `IconProps` interface. This consistent API makes it easy to style and control icons throughout your application.
+
+## Props Reference
+
+### color
+
+<ParamField path="color" type="string" default="currentColor">
+  The stroke color of the icon. Accepts any valid CSS color value.
+</ParamField>
+
+**Default Value**: `'currentColor'`
+
+The default `currentColor` value means icons inherit the text color from their parent element, making them easy to style with CSS.
+
+<CodeGroup>
+```svelte Hex Color
+<Accessibility color="#3b82f6" />
+```
+
+```svelte RGB
+<Accessibility color="rgb(59, 130, 246)" />
+```
+
+```svelte CSS Variable
+<Accessibility color="var(--primary-color)" />
+```
+
+```svelte Named Color
+<Accessibility color="blue" />
+```
+
+```svelte Inherit (Default)
+<div style="color: red;">
+  <Accessibility />
+  <!-- Icon will be red -->
+</div>
+```
+</CodeGroup>
+
+<Tip>
+  Using `currentColor` (the default) allows you to control icon colors with CSS `color` properties, making theme switching and responsive design easier.
+</Tip>
+
+### size
+
+<ParamField path="size" type="number" default={24}>
+  The width and height of the icon in pixels.
+</ParamField>
+
+**Default Value**: `24`
+
+Controls both the width and height of the icon simultaneously, maintaining the square aspect ratio.
+
+<CodeGroup>
+```svelte Small (16px)
+<Accessibility size={16} />
+```
+
+```svelte Default (24px)
+<Accessibility size={24} />
+```
+
+```svelte Large (32px)
+<Accessibility size={32} />
+```
+
+```svelte Extra Large (48px)
+<Accessibility size={48} />
+```
+
+```svelte Responsive
+<script>
+  let iconSize = $state(24);
+</script>
+
+<Accessibility size={iconSize} />
+<button onclick={() => iconSize = 48}>Enlarge</button>
+```
+</CodeGroup>
+
+<Note>
+  The `size` prop sets the SVG's width and height attributes. The viewBox remains `0 0 24 24`, ensuring the icon scales proportionally.
+</Note>
+
+### strokeWidth
+
+<ParamField path="strokeWidth" type="number" default={2}>
+  The width of the icon's stroke lines in pixels.
+</ParamField>
+
+**Default Value**: `2`
+
+Controls the thickness of the icon's lines. Higher values create bolder icons, while lower values create more delicate appearances.
+
+<CodeGroup>
+```svelte Thin (1px)
+<Accessibility strokeWidth={1} />
+```
+
+```svelte Default (2px)
+<Accessibility strokeWidth={2} />
+```
+
+```svelte Bold (3px)
+<Accessibility strokeWidth={3} />
+```
+
+```svelte Extra Bold (4px)
+<Accessibility strokeWidth={4} />
+```
+</CodeGroup>
+
+<Expandable title="Stroke Width Visual Comparison">
+  Different stroke widths create different visual weights:
+  
+  - **1px**: Delicate, minimal style
+  - **2px** (default): Balanced, clear visibility
+  - **3px**: Bold, emphasized
+  - **4px+**: Very bold, high emphasis
+
+  Choose based on your design system's typography scale and icon usage context.
+</Expandable>
+
+### animate
+
+<ParamField path="animate" type="boolean" default={false}>
+  Controls whether the icon is currently animating.
+</ParamField>
+
+**Default Value**: `false`
+
+This prop has dual behavior:
+- **`false`** (default): Enables automatic hover animations
+- **`true`**: Triggers animation and disables hover behavior (controlled mode)
+
+<CodeGroup>
+```svelte Automatic (Default)
+<Accessibility />
+<!-- Animates on hover automatically -->
+```
+
+```svelte Controlled Animation
+<script>
+  let isAnimating = $state(false);
+
+  function handleClick() {
+    isAnimating = true;
+    setTimeout(() => {
+      isAnimating = false;
+    }, 1400);
+  }
+</script>
+
+<button onclick={handleClick}>
+  <Accessibility animate={isAnimating} />
+  Click to animate
+</button>
+```
+
+```svelte Continuous Animation
+<script>
+  let shouldAnimate = $state(true);
+</script>
+
+<Accessibility animate={shouldAnimate} />
+<!-- Always animating -->
+```
+
+```svelte Disabled Animation
+<script>
+  // Set to true to prevent hover animations
+  let locked = $state(true);
+</script>
+
+<Accessibility animate={locked} />
+```
+</CodeGroup>
+
+<Warning>
+  When `animate={true}`, the icon's hover animation is disabled. This allows you to control animations programmatically without interference from the default hover behavior.
+</Warning>
+
+### class
+
+<ParamField path="class" type="string" optional>
+  Custom CSS class name(s) to apply to the icon's wrapper element.
+</ParamField>
+
+**Default Value**: `''` (empty string)
+
+Applies custom CSS classes to the wrapper `<div>` element, allowing you to add additional styling or utility classes.
+
+<CodeGroup>
+```svelte Single Class
+<Accessibility class="custom-icon" />
+```
+
+```svelte Multiple Classes
+<Accessibility class="icon large primary" />
+```
+
+```svelte Tailwind Classes
+<Accessibility class="mr-2 hover:scale-110 transition-transform" />
+```
+
+```svelte Conditional Classes
+<script>
+  let isActive = $state(false);
+</script>
+
+<Accessibility class={isActive ? 'active' : 'inactive'} />
+```
+
+```svelte With Custom Styles
+<style>
+  .my-icon {
+    margin-right: 0.5rem;
+    opacity: 0.8;
+  }
+  .my-icon:hover {
+    opacity: 1;
+  }
+</style>
+
+<Accessibility class="my-icon" />
+```
+</CodeGroup>
+
+<Info>
+  The `class` prop is applied to the wrapper `<div>`, not the `<svg>` element. This gives you control over positioning, spacing, and transform effects.
+</Info>
+
+## Combined Usage
+
+<CodeGroup>
+```svelte All Props
+<Accessibility
+  color="#3b82f6"
+  size={32}
+  strokeWidth={2.5}
+  animate={isAnimating}
+  class="custom-icon"
+/>
+```
+
+```svelte Responsive Icon
+<script>
+  let viewport = $state('desktop');
+  
+  $effect(() => {
+    const updateViewport = () => {
+      viewport = window.innerWidth < 768 ? 'mobile' : 'desktop';
+    };
+    window.addEventListener('resize', updateViewport);
+    updateViewport();
+  });
+</script>
+
+<Accessibility
+  size={viewport === 'mobile' ? 20 : 24}
+  strokeWidth={viewport === 'mobile' ? 1.5 : 2}
+/>
+```
+
+```svelte Themed Icon
+<script>
+  let theme = $state('light');
+</script>
+
+<Accessibility
+  color={theme === 'light' ? '#000000' : '#ffffff'}
+  class={`icon-${theme}`}
+/>
+```
+</CodeGroup>
+
+## TypeScript Support
+
+Import the `IconProps` type for full type safety:
+
+```typescript
+import type { IconProps } from 'moving-icons';
+
+const iconConfig: IconProps = {
+  color: '#3b82f6',
+  size: 24,
+  strokeWidth: 2,
+  animate: false,
+  class: 'custom-icon'
+};
+```
+
+<Check>
+  All props are optional with sensible defaults, making icons work great out of the box.
+</Check>
+
+## Default Values Summary
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `color` | `string` | `'currentColor'` | Stroke color |
+| `size` | `number` | `24` | Width and height in pixels |
+| `strokeWidth` | `number` | `2` | Line thickness in pixels |
+| `animate` | `boolean` | `false` | Animation state |
+| `class` | `string` | `''` | Custom CSS classes |

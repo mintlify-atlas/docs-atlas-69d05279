@@ -1,0 +1,208 @@
+---
+title: Basic Usage
+description: Learn how to import and use Moving Icons in your Svelte projects
+---
+
+## Installation
+
+Before using Moving Icons, make sure you have installed the package:
+
+```bash
+npm i @jis3r/icons
+```
+
+## Import Syntax
+
+All icons are available as named exports in PascalCase, matching their Lucide icon names:
+
+```svelte
+<script>
+  import { Activity, Star, Bell, Home } from '@jis3r/icons';
+</script>
+```
+
+<Note>
+  Icon names follow PascalCase convention (e.g., `ArrowRight`, `ChevronDown`, `BookOpen`) and are identical to their respective Lucide icon names.
+</Note>
+
+## Simple Icon Rendering
+
+Once imported, you can render icons directly in your component:
+
+```svelte
+<script>
+  import { Activity } from '@jis3r/icons';
+</script>
+
+<Activity />
+```
+
+This renders a 24×24px icon using the default settings.
+
+## Icon Sizing
+
+Control icon size using the `size` prop (in pixels):
+
+<Tabs>
+  <Tab title="Different Sizes">
+    ```svelte
+    <script>
+      import { Star } from '@jis3r/icons';
+    </script>
+
+    <Star size={16} />  <!-- Small -->
+    <Star size={24} />  <!-- Default -->
+    <Star size={32} />  <!-- Medium -->
+    <Star size={48} />  <!-- Large -->
+    ```
+  </Tab>
+  <Tab title="Responsive Sizing">
+    ```svelte
+    <script>
+      import { Bell } from '@jis3r/icons';
+      
+      let iconSize = $state(24);
+    </script>
+
+    <Bell size={iconSize} />
+    
+    <input 
+      type="range" 
+      min="16" 
+      max="64" 
+      bind:value={iconSize} 
+    />
+    ```
+  </Tab>
+</Tabs>
+
+## Styling Icons
+
+### Color Customization
+
+Icons use SVG strokes, so you control color with the `color` prop:
+
+```svelte
+<script>
+  import { Activity, Star, Bell } from '@jis3r/icons';
+</script>
+
+<Activity color="#ff6b00" />
+<Star color="blue" />
+<Bell color="rgb(255, 0, 128)" />
+```
+
+### Using currentColor
+
+By default, icons inherit the text color from their parent element:
+
+```svelte
+<script>
+  import { Home } from '@jis3r/icons';
+</script>
+
+<div style="color: purple;">
+  <Home /> <!-- Icon will be purple -->
+</div>
+
+<button style="color: green;">
+  <Home /> <!-- Icon will be green -->
+</button>
+```
+
+<Tip>
+  The default color is `currentColor`, which automatically inherits the parent element's text color. This makes icons naturally integrate with your existing color schemes.
+</Tip>
+
+### Stroke Width
+
+Adjust the visual weight of icons with `strokeWidth`:
+
+```svelte
+<script>
+  import { Star } from '@jis3r/icons';
+</script>
+
+<Star strokeWidth={1} />   <!-- Thin -->
+<Star strokeWidth={2} />   <!-- Default -->
+<Star strokeWidth={2.5} /> <!-- Medium -->
+<Star strokeWidth={3} />   <!-- Bold -->
+```
+
+### Custom CSS Classes
+
+Add custom styling with the `class` prop:
+
+```svelte
+<script>
+  import { Bell } from '@jis3r/icons';
+</script>
+
+<Bell class="opacity-50 hover:opacity-100 transition-opacity" />
+<Bell class="rotate-45 transform" />
+```
+
+## Complete Example
+
+Here's a complete example combining multiple props:
+
+```svelte
+<script>
+  import { Activity, Star, Bell } from '@jis3r/icons';
+</script>
+
+<div class="flex gap-4 items-center">
+  <Activity 
+    size={32} 
+    color="orange" 
+    strokeWidth={2.5} 
+  />
+  
+  <Star 
+    size={28} 
+    color="gold" 
+    class="hover:scale-110 transition-transform" 
+  />
+  
+  <Bell 
+    size={24} 
+    strokeWidth={2} 
+    class="text-blue-500" 
+  />
+</div>
+```
+
+## Button Integration
+
+Icons work seamlessly inside buttons and interactive elements:
+
+```svelte
+<script>
+  import { Bell, Home, Settings } from '@jis3r/icons';
+</script>
+
+<button class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded">
+  <Bell size={16} />
+  <span>Notifications</span>
+</button>
+
+<button class="p-2 rounded hover:bg-gray-100">
+  <Home size={20} />
+</button>
+
+<button class="flex items-center gap-2">
+  <Settings size={18} />
+  <span>Settings</span>
+</button>
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Props Reference" icon="sliders" href="/usage/props">
+    Explore all available props and their options
+  </Card>
+  <Card title="Animations" icon="sparkles" href="/usage/animations">
+    Learn how to control icon animations
+  </Card>
+</CardGroup>

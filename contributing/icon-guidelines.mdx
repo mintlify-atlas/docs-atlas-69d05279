@@ -1,0 +1,124 @@
+---
+title: Icon Guidelines
+description: Requirements and best practices for contributing animated icons
+icon: palette
+---
+
+When contributing icons to moving icons, please follow these guidelines to ensure consistency and quality across the library.
+
+## Icon Requirements
+
+<CardGroup cols={2}>
+  <Card title="Naming Convention" icon="tag">
+    Use kebab-case for all icon names (e.g., `arrow-up`, `chevron-left`)
+  </Card>
+  <Card title="Match Lucide" icon="copy">
+    Icon names must be identical to their Lucide counterparts
+  </Card>
+  <Card title="Svelte Components" icon="component">
+    Icons must be added as `.svelte` components
+  </Card>
+  <Card title="Vanilla CSS Only" icon="paintbrush">
+    Use only vanilla CSS for animations - no libraries like svelte-motion
+  </Card>
+</CardGroup>
+
+## Naming Conventions
+
+All icon names must follow these rules:
+
+- **Use kebab-case**: `arrow-up`, `chevron-left`, `settings-gear`
+- **Match Lucide names exactly**: Icon names must be identical to their [Lucide](https://lucide.dev) counterpart
+- **Be descriptive**: Names should clearly indicate what the icon represents
+
+### Examples
+
+<CodeGroup>
+```txt Good Examples
+arrow-up
+chevron-left
+settings-gear
+bell-ring
+heart-pulse
+```
+
+```txt Bad Examples
+ArrowUp (PascalCase)
+arrow_up (snake_case)
+arrowUp (camelCase)
+custom-animation (no Lucide equivalent)
+```
+</CodeGroup>
+
+## Technical Requirements
+
+### File Structure
+
+Icons must be added to the `src/lib/icons` directory as Svelte components:
+
+```
+src/lib/icons/
+  arrow-up.svelte
+  chevron-left.svelte
+  settings-gear.svelte
+```
+
+### Animation Guidelines
+
+<Note>
+  Only use vanilla CSS to create animations. Do not use animation libraries like svelte-motion, framer-motion, or similar packages.
+</Note>
+
+**Why vanilla CSS?**
+- Maintains zero dependencies
+- Ensures consistent performance
+- Keeps bundle size minimal
+- Provides better browser compatibility
+
+### Component Structure
+
+Your icon component should:
+- Be a valid Svelte component
+- Accept standard props (size, color, strokeWidth, class, animate)
+- Use CSS animations that trigger based on the `animate` prop
+- Match the visual style of the corresponding Lucide icon
+
+## Icon Requests
+
+Before creating an icon request:
+
+<Steps>
+  <Step title="Search existing requests">
+    Check if someone has already requested the icon in the [GitHub issues](https://github.com/jis3r/icons/issues).
+  </Step>
+  
+  <Step title="Add your vote">
+    If an open request exists, add a 👍 reaction to show your interest.
+  </Step>
+  
+  <Step title="Create new request">
+    If no request exists, create a new issue with:
+    - The Lucide icon name
+    - Your suggested animation idea
+    - Use cases or examples
+  </Step>
+</Steps>
+
+## Submission Checklist
+
+Before submitting your icon contribution, ensure:
+
+- [ ] Icon name is in kebab-case
+- [ ] Icon name matches the Lucide counterpart exactly
+- [ ] Component is added to `src/lib/icons` directory
+- [ ] Only vanilla CSS is used for animations
+- [ ] Animation works smoothly on hover/when `animate` prop is true
+- [ ] Icon follows the project's code style
+- [ ] You've tested the icon locally using `npm run dev`
+- [ ] Pull request includes screenshots or GIF of the animation
+
+## Next Steps
+
+<Card title="Development Setup" icon="code" href="/contributing/development">
+  Ready to start coding? Set up your development environment
+</Card>

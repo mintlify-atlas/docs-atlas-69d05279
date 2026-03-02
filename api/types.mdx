@@ -1,0 +1,370 @@
+---
+title: TypeScript Types
+description: Type definitions for Moving Icons components
+icon: code
+---
+
+## Overview
+
+Moving Icons is built with TypeScript and exports comprehensive type definitions for full type safety in your Svelte applications.
+
+## IconProps
+
+The main interface defining all props accepted by icon components.
+
+<CodeGroup>
+```typescript Interface Definition
+export interface IconProps {
+  color?: string;
+  size?: number;
+  strokeWidth?: number;
+  animate?: boolean;
+  class?: string;
+}
+```
+
+```typescript Import
+import type { IconProps } from 'moving-icons';
+```
+</CodeGroup>
+
+### Properties
+
+<ResponseField name="color" type="string" optional>
+  The stroke color of the icon. Accepts any valid CSS color value.
+  
+  **Default**: `'currentColor'`
+</ResponseField>
+
+<ResponseField name="size" type="number" optional>
+  The width and height of the icon in pixels.
+  
+  **Default**: `24`
+</ResponseField>
+
+<ResponseField name="strokeWidth" type="number" optional>
+  The width of the icon's stroke lines in pixels.
+  
+  **Default**: `2`
+</ResponseField>
+
+<ResponseField name="animate" type="boolean" optional>
+  Controls whether the icon is currently animating.
+  
+  **Default**: `false`
+</ResponseField>
+
+<ResponseField name="class" type="string" optional>
+  Custom CSS class name(s) to apply to the icon's wrapper element.
+  
+  **Default**: `''`
+</ResponseField>
+
+### Usage Examples
+
+<CodeGroup>
+```typescript Type Configuration Object
+import type { IconProps } from 'moving-icons';
+
+const iconConfig: IconProps = {
+  color: '#3b82f6',
+  size: 32,
+  strokeWidth: 2.5,
+  animate: false,
+  class: 'custom-icon'
+};
+```
+
+```typescript Function Parameter
+import type { IconProps } from 'moving-icons';
+import { Heart } from 'moving-icons';
+
+function renderIcon(props: IconProps) {
+  return <Heart {...props} />;
+}
+```
+
+```typescript Component Props
+import type { IconProps } from 'moving-icons';
+
+interface ButtonProps {
+  label: string;
+  iconProps?: IconProps;
+}
+
+function IconButton({ label, iconProps }: ButtonProps) {
+  return (
+    <button>
+      <Heart {...iconProps} />
+      {label}
+    </button>
+  );
+}
+```
+
+```typescript Partial Props
+import type { IconProps } from 'moving-icons';
+
+const defaultTheme: Partial<IconProps> = {
+  color: 'var(--primary)',
+  strokeWidth: 2
+};
+
+const customSize: Pick<IconProps, 'size'> = {
+  size: 48
+};
+```
+</CodeGroup>
+
+## IconName
+
+A union type of all available icon names (in kebab-case format).
+
+<CodeGroup>
+```typescript Type Definition
+export type IconName =
+  | 'accessibility'
+  | 'activity'
+  | 'airplay'
+  | 'alarm-clock-check'
+  | 'alarm-clock-off'
+  | 'alarm-clock'
+  // ... 530+ more icon names
+  | 'x'
+  | 'zap-off';
+```
+
+```typescript Import
+import type { IconName } from 'moving-icons';
+```
+</CodeGroup>
+
+### Usage Examples
+
+<CodeGroup>
+```typescript Type-Safe Icon Selection
+import type { IconName } from 'moving-icons';
+
+function getIconName(action: string): IconName {
+  switch (action) {
+    case 'delete':
+      return 'trash-2';
+    case 'edit':
+      return 'pencil';
+    case 'save':
+      return 'check';
+    default:
+      return 'circle-alert';
+  }
+}
+```
+
+```typescript Component Props
+import type { IconName } from 'moving-icons';
+
+interface StatusProps {
+  status: 'success' | 'error' | 'warning';
+  iconName: IconName;
+}
+
+function StatusMessage({ status, iconName }: StatusProps) {
+  // iconName is type-checked against all valid icon names
+  return <div data-icon={iconName}>{status}</div>;
+}
+```
+
+```typescript Array of Icons
+import type { IconName } from 'moving-icons';
+
+const socialIcons: IconName[] = [
+  'heart',
+  'star',
+  'thumbs-up',
+  'message-circle'
+];
+```
+
+```typescript Dynamic Icon Lookup
+import type { IconName } from 'moving-icons';
+
+const iconMap: Record<string, IconName> = {
+  home: 'house',
+  settings: 'cog',
+  profile: 'user',
+  logout: 'log-out'
+};
+```
+</CodeGroup>
+
+<Info>
+  The `IconName` type includes all 530+ icon names in kebab-case format, providing autocomplete and type safety when working with icon identifiers.
+</Info>
+
+## Import Syntax
+
+<CodeGroup>
+```typescript Import Types Only
+import type { IconProps, IconName } from 'moving-icons';
+```
+
+```typescript Import Components and Types
+import { Heart, Star } from 'moving-icons';
+import type { IconProps, IconName } from 'moving-icons';
+```
+
+```typescript Svelte Component Import
+<script lang="ts">
+  import { Accessibility } from 'moving-icons';
+  import type { IconProps } from 'moving-icons';
+
+  let props: IconProps = {
+    color: '#3b82f6',
+    size: 24
+  };
+</script>
+
+<Accessibility {...props} />
+```
+</CodeGroup>
+
+## Type Utilities
+
+Create custom types based on the exported types:
+
+<CodeGroup>
+```typescript Required Props
+import type { IconProps } from 'moving-icons';
+
+type RequiredIconProps = Required<IconProps>;
+
+const fullConfig: RequiredIconProps = {
+  color: '#000000',
+  size: 24,
+  strokeWidth: 2,
+  animate: false,
+  class: 'icon'
+};
+```
+
+```typescript Pick Specific Props
+import type { IconProps } from 'moving-icons';
+
+type SizeAndColor = Pick<IconProps, 'size' | 'color'>;
+
+const theme: SizeAndColor = {
+  size: 32,
+  color: '#3b82f6'
+};
+```
+
+```typescript Omit Props
+import type { IconProps } from 'moving-icons';
+
+type StaticIconProps = Omit<IconProps, 'animate'>;
+
+const staticConfig: StaticIconProps = {
+  color: '#000000',
+  size: 24,
+  strokeWidth: 2,
+  class: 'static-icon'
+};
+```
+
+```typescript Extend Props
+import type { IconProps } from 'moving-icons';
+
+interface ExtendedIconProps extends IconProps {
+  tooltip?: string;
+  onClick?: () => void;
+}
+
+const interactive: ExtendedIconProps = {
+  size: 24,
+  tooltip: 'Click me',
+  onClick: () => console.log('clicked')
+};
+```
+</CodeGroup>
+
+## Complete Example
+
+<CodeGroup>
+```typescript Svelte Component with Types
+<script lang="ts">
+  import { Heart, Star, ThumbsUp } from 'moving-icons';
+  import type { IconProps, IconName } from 'moving-icons';
+
+  interface IconButtonProps {
+    icon: IconName;
+    label: string;
+    iconProps?: IconProps;
+    onClick?: () => void;
+  }
+
+  let { icon, label, iconProps, onClick }: IconButtonProps = $props();
+
+  const defaultIconProps: IconProps = {
+    size: 20,
+    strokeWidth: 2,
+    color: 'currentColor'
+  };
+
+  const mergedProps = { ...defaultIconProps, ...iconProps };
+</script>
+
+<button onclick={onClick}>
+  {#if icon === 'heart'}
+    <Heart {...mergedProps} />
+  {:else if icon === 'star'}
+    <Star {...mergedProps} />
+  {:else if icon === 'thumbs-up'}
+    <ThumbsUp {...mergedProps} />
+  {/if}
+  <span>{label}</span>
+</button>
+```
+
+```typescript Type-Safe Icon Mapper
+import type { IconName } from 'moving-icons';
+import * as Icons from 'moving-icons';
+
+type IconComponent = typeof Icons[keyof typeof Icons];
+
+function getIconComponent(name: IconName): IconComponent | undefined {
+  // Convert kebab-case to PascalCase
+  const componentName = name
+    .split('-')
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+    .join('');
+  
+  return Icons[componentName as keyof typeof Icons] as IconComponent;
+}
+
+const HeartIcon = getIconComponent('heart');
+```
+</CodeGroup>
+
+<Check>
+  All types are exported from the main package entry point for easy importing.
+</Check>
+
+## Type Safety Benefits
+
+<CardGroup cols={2}>
+  <Card title="Autocomplete" icon="wand-magic-sparkles">
+    Get IDE autocomplete for all icon names and props
+  </Card>
+  <Card title="Type Checking" icon="shield-check">
+    Catch errors at compile time, not runtime
+  </Card>
+  <Card title="Refactoring" icon="code">
+    Safely rename and refactor with confidence
+  </Card>
+  <Card title="Documentation" icon="book">
+    Types serve as inline documentation
+  </Card>
+</CardGroup>
+
+<Tip>
+  Use TypeScript's strict mode for maximum type safety with Moving Icons.
+</Tip>

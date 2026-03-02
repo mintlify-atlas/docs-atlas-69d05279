@@ -1,0 +1,236 @@
+---
+title: Development Setup
+description: Set up your local environment to contribute to moving icons
+icon: code
+---
+
+Follow these steps to set up your development environment and start contributing to moving icons.
+
+## Prerequisites
+
+Before you begin, make sure you have:
+
+- Node.js installed (npm included)
+- Git installed
+- A GitHub account
+- (Optional) The Lucide repository cloned if you're adding new icons
+
+## Getting Started
+
+<Steps>
+  <Step title="Fork the repository">
+    Fork the [jis3r/icons repository](https://github.com/jis3r/icons) on GitHub to your own account.
+  </Step>
+  
+  <Step title="Clone your fork">
+    Clone your forked repository to your local machine:
+    
+    ```bash
+    git clone https://github.com/your-username/icons.git
+    ```
+  </Step>
+  
+  <Step title="Navigate to the project">
+    Change into the project directory:
+    
+    ```bash
+    cd icons
+    ```
+  </Step>
+  
+  <Step title="Create a feature branch">
+    Create a new branch for your feature or bug fix:
+    
+    ```bash
+    git checkout -b your-branch-name
+    ```
+    
+    Use descriptive branch names like `add-arrow-animations` or `fix-icon-sizing`.
+  </Step>
+  
+  <Step title="Install dependencies">
+    Install the project dependencies:
+    
+    ```bash
+    npm i
+    ```
+  </Step>
+</Steps>
+
+## Development Workflow
+
+### Making Changes
+
+Make your changes to the codebase. If you're not adding an icon, skip the next step.
+
+### Adding New Icons
+
+<Note>
+  To test icon additions, you must have the Lucide repository cloned in the same parent directory as this repository.
+</Note>
+
+If you're adding a new icon:
+
+<Steps>
+  <Step title="Clone Lucide repository">
+    Clone the [Lucide repository](https://github.com/lucide-icons/lucide) in the same directory as the icons repository:
+    
+    ```bash
+    cd ..
+    git clone https://github.com/lucide-icons/lucide.git
+    cd icons
+    ```
+  </Step>
+  
+  <Step title="Run the index script">
+    Use the index script to add the icon and generate necessary files:
+    
+    ```bash
+    npm run index
+    ```
+    
+    This script will help you select and configure the icon.
+  </Step>
+  
+  <Step title="Start development server">
+    Run the development server to test your icon:
+    
+    ```bash
+    npm run dev
+    ```
+    
+    The site will be available at `http://localhost:5173` (or similar).
+  </Step>
+</Steps>
+
+### Building the Project
+
+Once you've finished testing your changes:
+
+<Steps>
+  <Step title="Run the prep script">
+    This script handles all the build steps:
+    
+    ```bash
+    npm run prep
+    ```
+    
+    The prep script:
+    - Re-exports icons for npm
+    - Creates registry for shadcn-svelte
+    - Builds the project
+    - Formats the code
+  </Step>
+  
+  <Step title="Test the build">
+    Verify the build works correctly:
+    
+    ```bash
+    npm run build
+    npm run preview
+    ```
+  </Step>
+</Steps>
+
+## Submitting Your Changes
+
+<Steps>
+  <Step title="Commit your changes">
+    Create a descriptive commit message:
+    
+    ```bash
+    git commit -m "Your commit message"
+    ```
+    
+    See the [Pull Request Guidelines](/contributing/overview#pull-request-guidelines) for commit message best practices.
+  </Step>
+  
+  <Step title="Push to your fork">
+    Push your changes to your forked repository:
+    
+    ```bash
+    git push origin your-branch-name
+    ```
+  </Step>
+  
+  <Step title="Open a pull request">
+    Open a pull request on the original repository from your fork. Make sure to:
+    - Provide a clear description of your changes
+    - Link to any relevant issues
+    - Include screenshots for new icons
+    - Follow the pull request template if one exists
+  </Step>
+</Steps>
+
+## Development Scripts
+
+Here are the key npm scripts you'll use:
+
+| Script | Description |
+|--------|-------------|
+| `npm run dev` | Start the development server |
+| `npm run build` | Build the project for production |
+| `npm run preview` | Preview the production build |
+| `npm run index` | Index new icons from Lucide |
+| `npm run prep` | Run all build and format steps |
+| `npm run format` | Format code with Prettier |
+| `npm run lint` | Check code style and quality |
+
+## Testing Your Changes
+
+<AccordionGroup>
+  <Accordion title="Testing new icons">
+    1. Run `npm run dev` to start the development server
+    2. Navigate to the icons page
+    3. Find your icon and test the animation
+    4. Verify it works with different props (size, color, strokeWidth)
+    5. Test the `animate` prop binding
+  </Accordion>
+  
+  <Accordion title="Testing the build">
+    1. Run `npm run prep` to build everything
+    2. Run `npm run build` to create the production build
+    3. Run `npm run preview` to test the production build
+    4. Verify there are no build errors or warnings
+  </Accordion>
+</AccordionGroup>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Index script fails">
+    Make sure the Lucide repository is cloned in the same parent directory as the icons repository. The directory structure should look like:
+    
+    ```
+    parent-directory/
+      icons/
+      lucide/
+    ```
+  </Accordion>
+  
+  <Accordion title="Build errors">
+    Try running:
+    ```bash
+    npm run format
+    npm run lint
+    ```
+    
+    This will format your code and check for common issues.
+  </Accordion>
+  
+  <Accordion title="Dependencies issues">
+    Remove and reinstall dependencies:
+    ```bash
+    rm -rf node_modules package-lock.json
+    npm i
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Thank You!
+
+Thank you for contributing to moving icons! Your contributions help make this library better for the entire Svelte community.
+
+<Card title="Back to Contributing Overview" icon="arrow-left" href="/contributing/overview">
+  View all contribution guidelines
+</Card>

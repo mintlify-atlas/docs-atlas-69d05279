@@ -1,80 +1,306 @@
 ---
-title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+title: 'Quick Start'
+description: 'Get up and running with Moving Icons in minutes - basic usage, props, and animation control'
+keywords: ['quickstart', 'tutorial', 'getting started', 'examples', 'usage']
 ---
 
-## Get started in three steps
+# Quick Start
 
-Get your documentation site running locally and make your first customization.
-
-### Step 1: Set up your local environment
-
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
-
-### Step 2: Deploy your changes
-
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
-
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
-
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
-
-### Step 3: Go live
-
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
-
-## Next steps
-
-Now that you have your docs running, explore these key features:
-
-<CardGroup cols={2}>
-
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
-</CardGroup>
+This guide will get you from zero to animated icons in just a few minutes. We'll cover the essentials you need to start using Moving Icons effectively.
 
 <Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
+This guide assumes you've already [installed Moving Icons](/installation) in your project.
 </Note>
+
+## Basic Usage
+
+Importing and using icons is straightforward. All icons are available as named exports in PascalCase, matching their respective Lucide icon names.
+
+```svelte example.svelte
+<script>
+  import { Activity, Star } from '@jis3r/icons';
+</script>
+
+<Activity size={32} color="orange" strokeWidth={2.5} />
+<Star size={32} color="blue" />
+```
+
+That's it! The icons will render and animate on hover by default.
+
+<Tip>
+All icon names follow PascalCase convention. For example, `arrow-right` becomes `ArrowRight`, and `settings-2` becomes `Settings2`.
+</Tip>
+
+## Available Props
+
+Every icon component accepts the following props for customization:
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `size` | number | `24` | Icon size in pixels |
+| `color` | string | `'currentColor'` | Stroke color (any CSS color value) |
+| `strokeWidth` | number | `2` | SVG stroke width |
+| `class` | string | `—` | Optional additional CSS classes |
+| `animate` | boolean | `false` | Controls icon animation state |
+
+### Using Props
+
+```svelte
+<script>
+  import { Heart, Settings, Zap } from '@jis3r/icons';
+</script>
+
+<!-- Custom size -->
+<Heart size={48} />
+
+<!-- Custom color -->
+<Settings color="#ff6b35" />
+
+<!-- Custom stroke width -->
+<Zap strokeWidth={3} />
+
+<!-- Combining props -->
+<Heart size={64} color="red" strokeWidth={2.5} />
+
+<!-- Adding CSS classes -->
+<Settings class="opacity-50 hover:opacity-100" />
+```
+
+<Info>
+The `color` prop accepts any valid CSS color: hex codes, RGB, HSL, named colors, or `currentColor` to inherit from parent elements.
+</Info>
+
+## Animation Control
+
+By default, icons animate on hover. For more control, use the `animate` prop to trigger animations programmatically.
+
+### Hover Animation (Default)
+
+Icons automatically animate when you hover over them:
+
+```svelte
+<script>
+  import { Bell } from '@jis3r/icons';
+</script>
+
+<Bell size={24} />
+```
+
+### Manual Animation Control
+
+Control animation state from parent elements using the `animate` prop:
+
+```svelte
+<script>
+  import { Bell } from '@jis3r/icons';
+
+  let animate = $state(false);
+</script>
+
+<button
+  onmouseenter={() => (animate = true)}
+  onmouseleave={() => (animate = false)}
+  class="flex items-center gap-2"
+>
+  <Bell size={16} {animate} />
+  <span>Notifications</span>
+</button>
+```
+
+This pattern is perfect for buttons, navigation items, or any interactive element where you want the icon to animate when hovering the entire container.
+
+<Tip>
+Using `{animate}` is shorthand for `animate={animate}` in Svelte. Both work identically.
+</Tip>
+
+## Practical Examples
+
+### Example 1: Colorful Icon Grid
+
+```svelte
+<script>
+  import { Activity, Star, Heart, Zap, Settings, Bell } from '@jis3r/icons';
+</script>
+
+<div class="grid grid-cols-3 gap-8 p-8">
+  <Activity size={48} color="#ff6b35" />
+  <Star size={48} color="gold" />
+  <Heart size={48} color="red" />
+  <Zap size={48} color="purple" />
+  <Settings size={48} color="#64748b" />
+  <Bell size={48} color="blue" />
+</div>
+```
+
+### Example 2: Interactive Button
+
+```svelte
+<script>
+  import { Heart } from '@jis3r/icons';
+
+  let liked = $state(false);
+</script>
+
+<button
+  onclick={() => (liked = !liked)}
+  class="flex items-center gap-2 rounded-lg border px-4 py-2"
+>
+  <Heart
+    size={20}
+    color={liked ? 'red' : 'currentColor'}
+    animate={liked}
+  />
+  <span>{liked ? 'Liked' : 'Like'}</span>
+</button>
+```
+
+### Example 3: Navigation Menu
+
+```svelte
+<script>
+  import { Home, Settings, User, Mail } from '@jis3r/icons';
+
+  let activeItem = $state('home');
+</script>
+
+<nav class="flex flex-col gap-2">
+  <a
+    href="/"
+    class="flex items-center gap-3 rounded-lg px-4 py-2 hover:bg-gray-100"
+  >
+    <Home size={20} color={activeItem === 'home' ? '#ff6b35' : 'currentColor'} />
+    <span>Home</span>
+  </a>
+  
+  <a
+    href="/profile"
+    class="flex items-center gap-3 rounded-lg px-4 py-2 hover:bg-gray-100"
+  >
+    <User size={20} color={activeItem === 'profile' ? '#ff6b35' : 'currentColor'} />
+    <span>Profile</span>
+  </a>
+  
+  <a
+    href="/messages"
+    class="flex items-center gap-3 rounded-lg px-4 py-2 hover:bg-gray-100"
+  >
+    <Mail size={20} color={activeItem === 'messages' ? '#ff6b35' : 'currentColor'} />
+    <span>Messages</span>
+  </a>
+  
+  <a
+    href="/settings"
+    class="flex items-center gap-3 rounded-lg px-4 py-2 hover:bg-gray-100"
+  >
+    <Settings size={20} color={activeItem === 'settings' ? '#ff6b35' : 'currentColor'} />
+    <span>Settings</span>
+  </a>
+</nav>
+```
+
+## Using with Tailwind CSS
+
+Moving Icons work seamlessly with Tailwind's text color utilities:
+
+```svelte
+<script>
+  import { Activity, Star, Heart } from '@jis3r/icons';
+</script>
+
+<div class="flex gap-4">
+  <Activity size={32} class="text-orange-500" />
+  <Star size={32} class="text-yellow-500" />
+  <Heart size={32} class="text-red-500" />
+</div>
+```
+
+<Note>
+When using Tailwind's text color utilities, the icon will inherit the color automatically. You don't need to set the `color` prop separately.
+</Note>
+
+## Common Patterns
+
+### Consistent Sizing
+
+Create consistent icon sizes across your app:
+
+```svelte
+<script>
+  import { Home, Settings, User } from '@jis3r/icons';
+
+  const iconSize = 20;
+</script>
+
+<Home size={iconSize} />
+<Settings size={iconSize} />
+<User size={iconSize} />
+```
+
+### Dynamic Icons
+
+Render icons dynamically based on data:
+
+```svelte
+<script>
+  import { Activity, Star, Heart, Zap } from '@jis3r/icons';
+
+  const icons = {
+    activity: Activity,
+    star: Star,
+    heart: Heart,
+    zap: Zap
+  };
+
+  let iconName = $state('heart');
+  let IconComponent = $derived(icons[iconName]);
+</script>
+
+<IconComponent size={32} />
+```
+
+## Performance Tips
+
+<AccordionGroup>
+  <Accordion title="Import only what you need">
+    Thanks to tree-shaking, only imported icons are included in your bundle:
+
+    ```svelte
+    // Good - only Activity and Star are bundled
+    import { Activity, Star } from '@jis3r/icons';
+
+    // Avoid - this still tree-shakes properly, but be explicit
+    import * as Icons from '@jis3r/icons';
+    ```
+  </Accordion>
+
+  <Accordion title="Animations are pure CSS">
+    All animations use CSS only, with zero JavaScript overhead. They run at 60fps and don't impact performance.
+  </Accordion>
+
+  <Accordion title="Respect reduced motion preferences">
+    Moving Icons automatically respects the `prefers-reduced-motion` media query, ensuring accessibility for users who need calmer interfaces.
+  </Accordion>
+</AccordionGroup>
+
+## Next Steps
+
+You now know the basics of using Moving Icons! Here's where to go next:
+
+<CardGroup cols={2}>
+  <Card title="Advanced Patterns" icon="code" href="/usage/advanced-patterns">
+    Learn advanced techniques like reusable wrappers and animation patterns
+  </Card>
+  <Card title="Props Reference" icon="list" href="/usage/props">
+    Detailed documentation of all available props and their behavior
+  </Card>
+  <Card title="Animation Control" icon="sparkles" href="/usage/animations">
+    Deep dive into controlling animations programmatically
+  </Card>
+  <Card title="Browse All Icons" icon="grid" href="https://movingicons.dev">
+    Explore all 530+ animated icons on the website
+  </Card>
+</CardGroup>
+
+<Tip>
+For real-world examples and inspiration, check out the [examples page](/resources/examples) to see Moving Icons in action.
+</Tip>

@@ -1,0 +1,524 @@
+---
+title: Advanced Patterns
+description: Learn advanced techniques for using Moving Icons in complex applications
+---
+
+## Binding Animate Prop to Parent State
+
+Control icon animations from parent component state to create cohesive interactive experiences.
+
+### Basic State Binding
+
+The simplest pattern binds the `animate` prop to a reactive state variable:
+
+```svelte
+<script>
+  import { Bell } from '@jis3r/icons';
+  
+  let animate = $state(false);
+</script>
+
+<button
+  onmouseenter={() => animate = true}
+  onmouseleave={() => animate = false}
+  class="flex items-center gap-2"
+>
+  <Bell size={16} {animate} />
+  <span>Notifications</span>
+</button>
+```
+
+### Multi-Icon Coordination
+
+Animate multiple icons simultaneously:
+
+```svelte
+<script>
+  import { Bell, Mail, MessageSquare } from '@jis3r/icons';
+  
+  let animate = $state(false);
+</script>
+
+<div
+  class="flex gap-4 p-4 border rounded"
+  onmouseenter={() => animate = true}
+  onmouseleave={() => animate = false}
+>
+  <Bell {animate} />
+  <Mail {animate} />
+  <MessageSquare {animate} />
+</div>
+```
+
+### Sequential Animations
+
+Animate icons one after another:
+
+```svelte
+<script>
+  import { Home, Settings, Bell } from '@jis3r/icons';
+  
+  let animate1 = $state(false);
+  let animate2 = $state(false);
+  let animate3 = $state(false);
+  
+  function animateSequence() {
+    animate1 = true;
+    setTimeout(() => {
+      animate1 = false;
+      animate2 = true;
+      setTimeout(() => {
+        animate2 = false;
+        animate3 = true;
+        setTimeout(() => {
+          animate3 = false;
+        }, 600);
+      }, 200);
+    }, 200);
+  }
+</script>
+
+<div class="flex gap-4">
+  <button onclick={animateSequence}>Animate All</button>
+  <Home animate={animate1} />
+  <Settings animate={animate2} />
+  <Bell animate={animate3} />
+</div>
+```
+
+## Building Reusable Wrapper Components
+
+Create reusable components that pass hover state to children using Svelte 5 snippets.
+
+### HoverableItem Component
+
+From the README (lines 86-99), here's the complete pattern:
+
+```svelte title="HoverableItem.svelte"
+<script>
+  let { children, class: className = '' } = $props();
+  let isHovered = $state(false);
+</script>
+
+<div
+  class={className}
+  onmouseenter={() => (isHovered = true)}
+  onmouseleave={() => (isHovered = false)}
+>
+  {@render children(isHovered)}
+</div>
+```
+
+<Note>
+  This component uses Svelte 5's snippet feature to pass the hover state to child components. The `children` prop is a snippet that receives `isHovered` as a parameter.
+</Note>
+
+### Using the Wrapper
+
+Implement the wrapper in navigation menus:
+
+```svelte
+<script>
+  import HoverableItem from './HoverableItem.svelte';
+  import { Home, Settings, Bell, User } from '@jis3r/icons';
+</script>
+
+<nav class="flex flex-col gap-2">
+  <HoverableItem class="flex items-center gap-2 rounded p-2 hover:bg-gray-100">
+    {#snippet children(isHovered)}
+      <Home size={16} animate={isHovered} />
+      <span>Home</span>
+    {/snippet}
+  </HoverableItem>
+  
+  <HoverableItem class="flex items-center gap-2 rounded p-2 hover:bg-gray-100">
+    {#snippet children(isHovered)}
+      <Settings size={16} animate={isHovered} />
+      <span>Settings</span>
+    {/snippet}
+  </HoverableItem>
+  
+  <HoverableItem class="flex items-center gap-2 rounded p-2 hover:bg-gray-100">
+    {#snippet children(isHovered)}
+      <Bell size={16} animate={isHovered} />
+      <span>Notifications</span>
+    {/snippet}
+  </HoverableItem>
+</nav>
+```
+
+### Enhanced Wrapper with Click
+
+Extend the wrapper to support click events:
+
+```svelte title="InteractiveItem.svelte"
+<script>
+  let { 
+    children, 
+    onclick = () => {},
+    class: className = '' 
+  } = $props();
+  
+  let isHovered = $state(false);
+  let isActive = $state(false);
+  
+  function handleClick() {
+    isActive = true;
+    setTimeout(() => {
+      isActive = false;
+    }, 600);
+    onclick();
+  }
+</script>
+
+<button
+  class={className}
+  {onclick}
+  onmouseenter={() => (isHovered = true)}
+  onmouseleave={() => (isHovered = false)}
+>
+  {@render children(isHovered || isActive)}
+</button>
+```
+
+## Navigation Integration
+
+### Sidebar Navigation
+
+Complete sidebar example with active states:
+
+```svelte title="Sidebar.svelte"
+<script>
+  import HoverableItem from './HoverableItem.svelte';
+  import { Home, Settings, Bell, User, LayoutDashboard } from '@jis3r/icons';
+  
+  let currentPath = $state('/home');
+  
+  const navItems = [
+    { path: '/home', label: 'Home', icon: Home },
+    { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { path: '/notifications', label: 'Notifications', icon: Bell },
+    { path: '/settings', label: 'Settings', icon: Settings },
+    { path: '/profile', label: 'Profile', icon: User },
+  ];
+</script>
+
+<aside class="w-64 bg-white border-r h-screen p-4">
+  <nav class="flex flex-col gap-1">
+    {#each navItems as item}
+      <HoverableItem 
+        class="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors
+               {currentPath === item.path ? 'bg-blue-100 text-blue-600' : 'hover:bg-gray-100'}"
+      >
+        {#snippet children(isHovered)}
+          <item.icon 
+            size={20} 
+            animate={isHovered}
+            color={currentPath === item.path ? '#2563eb' : 'currentColor'}
+          />
+          <span class="font-medium">{item.label}</span>
+        {/snippet}
+      </HoverableItem>
+    {/each}
+  </nav>
+</aside>
+```
+
+### Tab Navigation
+
+```svelte title="TabNav.svelte"
+<script>
+  import { Activity, Star, Bell, Settings } from '@jis3r/icons';
+  
+  let activeTab = $state('activity');
+  let hoveredTab = $state(null);
+  
+  const tabs = [
+    { id: 'activity', label: 'Activity', icon: Activity },
+    { id: 'favorites', label: 'Favorites', icon: Star },
+    { id: 'notifications', label: 'Notifications', icon: Bell },
+    { id: 'settings', label: 'Settings', icon: Settings },
+  ];
+</script>
+
+<div class="flex border-b">
+  {#each tabs as tab}
+    <button
+      class="flex items-center gap-2 px-4 py-3 border-b-2 transition-colors
+             {activeTab === tab.id 
+               ? 'border-blue-500 text-blue-600' 
+               : 'border-transparent hover:bg-gray-50'}"
+      onclick={() => activeTab = tab.id}
+      onmouseenter={() => hoveredTab = tab.id}
+      onmouseleave={() => hoveredTab = null}
+    >
+      <tab.icon 
+        size={18}
+        animate={hoveredTab === tab.id || activeTab === tab.id}
+        color={activeTab === tab.id ? '#2563eb' : 'currentColor'}
+      />
+      <span>{tab.label}</span>
+    </button>
+  {/each}
+</div>
+```
+
+## Custom Animation Triggers
+
+### Scroll-Based Animation
+
+Animate icons when they enter the viewport:
+
+```svelte
+<script>
+  import { Activity } from '@jis3r/icons';
+  import { onMount } from 'svelte';
+  
+  let element;
+  let animate = $state(false);
+  
+  onMount(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            animate = true;
+            setTimeout(() => {
+              animate = false;
+            }, 600);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+    
+    observer.observe(element);
+    
+    return () => observer.disconnect();
+  });
+</script>
+
+<div bind:this={element} class="min-h-screen flex items-center justify-center">
+  <Activity size={48} {animate} />
+</div>
+```
+
+### Focus-Based Animation
+
+Animate when an input receives focus:
+
+```svelte
+<script>
+  import { Search } from '@jis3r/icons';
+  
+  let isFocused = $state(false);
+</script>
+
+<div class="relative">
+  <div class="absolute left-3 top-1/2 -translate-y-1/2">
+    <Search animate={isFocused} color={isFocused ? '#2563eb' : '#6b7280'} />
+  </div>
+  
+  <input
+    type="text"
+    class="pl-10 pr-4 py-2 border rounded-lg w-full"
+    placeholder="Search..."
+    onfocus={() => isFocused = true}
+    onblur={() => isFocused = false}
+  />
+</div>
+```
+
+### Data-Driven Animation
+
+Animate based on data changes:
+
+```svelte
+<script>
+  import { TrendingUp, TrendingDown } from '@jis3r/icons';
+  
+  let value = $state(100);
+  let previousValue = $state(100);
+  let animate = $state(false);
+  
+  $effect(() => {
+    if (value !== previousValue) {
+      animate = true;
+      setTimeout(() => {
+        animate = false;
+        previousValue = value;
+      }, 600);
+    }
+  });
+  
+  let isUp = $derived(value > previousValue);
+</script>
+
+<div class="flex items-center gap-2">
+  {#if isUp}
+    <TrendingUp {animate} color="green" />
+  {:else}
+    <TrendingDown {animate} color="red" />
+  {/if}
+  <span class="text-2xl font-bold">{value}</span>
+</div>
+```
+
+## Real-World Examples
+
+### Notification Badge
+
+```svelte title="NotificationButton.svelte"
+<script>
+  import { Bell } from '@jis3r/icons';
+  
+  let { count = 0 } = $props();
+  let animate = $state(false);
+  let prevCount = $state(0);
+  
+  $effect(() => {
+    if (count > prevCount) {
+      animate = true;
+      setTimeout(() => {
+        animate = false;
+      }, 1100);
+    }
+    prevCount = count;
+  });
+</script>
+
+<button class="relative p-2 hover:bg-gray-100 rounded-lg">
+  <Bell {animate} />
+  {#if count > 0}
+    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+      {count > 9 ? '9+' : count}
+    </span>
+  {/if}
+</button>
+```
+
+### Loading States
+
+```svelte title="LoadingButton.svelte"
+<script>
+  import { Loader2 } from '@jis3r/icons';
+  
+  let { loading = false, children } = $props();
+</script>
+
+<button 
+  class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
+  disabled={loading}
+>
+  {#if loading}
+    <Loader2 animate={true} />
+    <span>Loading...</span>
+  {:else}
+    {@render children()}
+  {/if}
+</button>
+```
+
+### Contextual Menu
+
+```svelte title="ContextMenu.svelte"
+<script>
+  import { Copy, Download, Share, Trash } from '@jis3r/icons';
+  
+  let hoveredItem = $state(null);
+  
+  const menuItems = [
+    { id: 'copy', label: 'Copy', icon: Copy, action: () => {} },
+    { id: 'download', label: 'Download', icon: Download, action: () => {} },
+    { id: 'share', label: 'Share', icon: Share, action: () => {} },
+    { id: 'delete', label: 'Delete', icon: Trash, action: () => {}, danger: true },
+  ];
+</script>
+
+<div class="bg-white border rounded-lg shadow-lg py-1 w-48">
+  {#each menuItems as item}
+    <button
+      class="w-full flex items-center gap-3 px-3 py-2 hover:bg-gray-100 transition-colors
+             {item.danger ? 'text-red-600' : ''}"
+      onclick={item.action}
+      onmouseenter={() => hoveredItem = item.id}
+      onmouseleave={() => hoveredItem = null}
+    >
+      <item.icon 
+        size={16} 
+        animate={hoveredItem === item.id}
+        color={item.danger ? '#dc2626' : 'currentColor'}
+      />
+      <span>{item.label}</span>
+    </button>
+  {/each}
+</div>
+```
+
+## Performance Optimization
+
+### Lazy Animation Loading
+
+Defer animations until user interaction:
+
+```svelte
+<script>
+  import { Bell } from '@jis3r/icons';
+  
+  let hasInteracted = $state(false);
+  let animate = $state(false);
+  
+  function handleFirstInteraction() {
+    hasInteracted = true;
+    animate = true;
+    setTimeout(() => {
+      animate = false;
+    }, 1100);
+  }
+</script>
+
+<button
+  onmouseenter={hasInteracted ? () => animate = true : handleFirstInteraction}
+  onmouseleave={() => animate = false}
+>
+  <Bell {animate} />
+</button>
+```
+
+### Debounced Animations
+
+Prevent animation spam on rapid interactions:
+
+```svelte
+<script>
+  import { Star } from '@jis3r/icons';
+  
+  let animate = $state(false);
+  let debounceTimer;
+  
+  function handleHover() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      animate = true;
+      setTimeout(() => {
+        animate = false;
+      }, 600);
+    }, 100);
+  }
+</script>
+
+<button onmouseenter={handleHover}>
+  <Star {animate} />
+</button>
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Icon List" icon="grid" href="/api/icon-list">
+    Browse all 500+ available icons
+  </Card>
+  <Card title="Props Reference" icon="sliders" href="/usage/props">
+    Complete props documentation
+  </Card>
+</CardGroup>

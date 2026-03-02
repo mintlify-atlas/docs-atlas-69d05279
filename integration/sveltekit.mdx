@@ -1,0 +1,468 @@
+---
+title: 'SvelteKit Integration'
+description: 'Complete guide to integrating Moving Icons in your SvelteKit projects'
+---
+
+Moving Icons is built natively for Svelte 5 and works seamlessly with SvelteKit. This guide covers installation, usage patterns, and best practices for SvelteKit applications.
+
+## Prerequisites
+
+<Info>
+  Moving Icons requires Svelte version 5.0.0 or higher. Ensure your SvelteKit project is using Svelte 5.
+</Info>
+
+## Installation
+
+<Steps>
+  <Step title="Install the package">
+    Add Moving Icons to your SvelteKit project:
+
+    ```bash
+    npm i @jis3r/icons
+    ```
+  </Step>
+
+  <Step title="Verify Svelte version">
+    Check your `package.json` to ensure Svelte is version 5.0.0 or higher:
+
+    ```json package.json
+    {
+      "dependencies": {
+        "svelte": "^5.0.0"
+      }
+    }
+    ```
+  </Step>
+</Steps>
+
+## Usage in Pages
+
+Import and use icons in your `+page.svelte` files:
+
+```svelte +page.svelte
+<script>
+  import { Activity, Star, Bell } from '@jis3r/icons';
+</script>
+
+<h1>Dashboard</h1>
+
+<div class="stats">
+  <Activity size={24} color="currentColor" />
+  <span>Activity</span>
+</div>
+
+<button>
+  <Bell size={16} />
+  Notifications
+</button>
+```
+
+## Usage in Layouts
+
+Moving Icons work perfectly in `+layout.svelte` files for navigation and persistent UI elements:
+
+```svelte +layout.svelte
+<script>
+  import { House, Settings, User, LogOut } from '@jis3r/icons';
+  import { page } from '$app/stores';
+
+  let animate = $state(false);
+</script>
+
+<nav>
+  <a href="/" aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
+    <House size={20} />
+    <span>Home</span>
+  </a>
+  
+  <a href="/settings" aria-current={$page.url.pathname === '/settings' ? 'page' : undefined}>
+    <Settings size={20} />
+    <span>Settings</span>
+  </a>
+  
+  <a href="/profile" aria-current={$page.url.pathname === '/profile' ? 'page' : undefined}>
+    <User size={20} />
+    <span>Profile</span>
+  </a>
+  
+  <button
+    onmouseenter={() => (animate = true)}
+    onmouseleave={() => (animate = false)}
+  >
+    <LogOut size={20} {animate} />
+    <span>Logout</span>
+  </button>
+</nav>
+
+<slot />
+
+<style>
+  nav {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+  }
+  
+  a, button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  a:hover, button:hover {
+    background: #f5f5f5;
+  }
+  
+  [aria-current="page"] {
+    background: #e5e5e5;
+  }
+</style>
+```
+
+## Server-Side Rendering
+
+<Tip>
+  Moving Icons components are fully compatible with SvelteKit's SSR. They render correctly on the server and hydrate seamlessly on the client.
+</Tip>
+
+### SSR Considerations
+
+1. **Animation State**: Animations only trigger in the browser. During SSR, icons render in their default state.
+
+2. **Component Rendering**: All icon components are rendered as static SVG on the server, with animations hydrated on the client.
+
+3. **No Client-Only Imports Needed**: Unlike some animation libraries, Moving Icons don't require client-only imports or special SSR handling.
+
+```svelte +page.svelte
+<script>
+  // No special imports needed - works with SSR out of the box
+  import { Rocket, Star } from '@jis3r/icons';
+</script>
+
+<Rocket size={32} />
+```
+
+## Example Project Structure
+
+Here's a recommended structure for a SvelteKit project using Moving Icons:
+
+```
+src/
+├── routes/
+│   ├── +layout.svelte          # Root layout with navigation icons
+│   ├── +page.svelte             # Home page
+│   ├── dashboard/
+│   │   └── +page.svelte         # Dashboard with activity icons
+│   └── settings/
+│       └── +page.svelte         # Settings page
+├── lib/
+│   ├── components/
+│   │   ├── Button.svelte        # Reusable button with icons
+│   │   └── Card.svelte          # Card component with icons
+│   └── utils/
+│       └── icons.ts             # Icon configuration (optional)
+└── app.html
+```
+
+### Reusable Icon Button Component
+
+Create a reusable component that accepts any icon:
+
+```svelte src/lib/components/IconButton.svelte
+<script lang="ts">
+  import type { Snippet } from 'svelte';
+  
+  let {
+    children,
+    onclick,
+    variant = 'default',
+    class: className = ''
+  }: {
+    children: Snippet;
+    onclick?: () => void;
+    variant?: 'default' | 'primary' | 'danger';
+    class?: string;
+  } = $props();
+  
+  let animate = $state(false);
+</script>
+
+<button
+  {onclick}
+  class="icon-button {variant} {className}"
+  onmouseenter={() => (animate = true)}
+  onmouseleave={() => (animate = false)}
+>
+  {@render children(animate)}
+</button>
+
+<style>
+  .icon-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .default {
+    background: #f5f5f5;
+    color: #333;
+  }
+  
+  .primary {
+    background: #0070f3;
+    color: white;
+  }
+  
+  .danger {
+    background: #ef4444;
+    color: white;
+  }
+  
+  .icon-button:hover {
+    opacity: 0.9;
+  }
+</style>
+```
+
+Use it in your pages:
+
+```svelte +page.svelte
+<script>
+  import IconButton from '$lib/components/IconButton.svelte';
+  import { Trash, Send, Download } from '@jis3r/icons';
+  
+  function handleDelete() {
+    console.log('Delete clicked');
+  }
+</script>
+
+<IconButton variant="danger" onclick={handleDelete}>
+  {#snippet children(animate)}
+    <Trash size={16} {animate} />
+    <span>Delete</span>
+  {/snippet}
+</IconButton>
+
+<IconButton variant="primary">
+  {#snippet children(animate)}
+    <Send size={16} {animate} />
+    <span>Send</span>
+  {/snippet}
+</IconButton>
+```
+
+## Best Practices
+
+<Steps>
+  <Step title="Import only what you need">
+    Thanks to tree-shaking, only the icons you import will be included in your bundle:
+
+    ```svelte
+    // Good - only Activity and Star are bundled
+    import { Activity, Star } from '@jis3r/icons';
+
+    // Avoid - imports everything
+    import * as Icons from '@jis3r/icons';
+    ```
+  </Step>
+
+  <Step title="Use consistent sizing">
+    Define standard sizes for your application:
+
+    ```svelte
+    <script>
+      import { Settings } from '@jis3r/icons';
+      
+      // Define size constants
+      const ICON_SIZES = {
+        sm: 16,
+        md: 20,
+        lg: 24,
+        xl: 32
+      };
+    </script>
+
+    <Settings size={ICON_SIZES.md} />
+    ```
+  </Step>
+
+  <Step title="Control animations explicitly">
+    For better UX, control when icons animate:
+
+    ```svelte
+    <script>
+      import { Bell } from '@jis3r/icons';
+      
+      let hasNotifications = $state(true);
+    </script>
+
+    <!-- Animate only when there are notifications -->
+    <Bell size={20} animate={hasNotifications} />
+    ```
+  </Step>
+
+  <Step title="Leverage SvelteKit features">
+    Use SvelteKit's reactivity with icons:
+
+    ```svelte
+    <script>
+      import { Heart, HeartOff } from '@jis3r/icons';
+      import { page } from '$app/stores';
+      
+      let isFavorite = $derived($page.data.isFavorite);
+    </script>
+
+    {#if isFavorite}
+      <Heart size={20} color="red" />
+    {:else}
+      <HeartOff size={20} />
+    {/if}
+    ```
+  </Step>
+
+  <Step title="Optimize for performance">
+    For pages with many icons, consider lazy loading:
+
+    ```svelte
+    <script>
+      import { onMount } from 'svelte';
+      
+      let IconComponent = $state(null);
+      
+      onMount(async () => {
+        const module = await import('@jis3r/icons');
+        IconComponent = module.Activity;
+      });
+    </script>
+
+    {#if IconComponent}
+      <IconComponent size={24} />
+    {/if}
+    ```
+  </Step>
+</Steps>
+
+## Common Patterns
+
+### Loading States
+
+```svelte
+<script>
+  import { LoaderPinwheel } from '@jis3r/icons';
+  
+  let isLoading = $state(true);
+</script>
+
+{#if isLoading}
+  <div class="loading">
+    <LoaderPinwheel size={24} animate={true} />
+    <span>Loading...</span>
+  </div>
+{/if}
+
+<style>
+  .loading {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+</style>
+```
+
+### Form Validation
+
+```svelte
+<script>
+  import { CircleCheck, CircleAlert } from '@jis3r/icons';
+  
+  let email = $state('');
+  let isValid = $derived(email.includes('@'));
+</script>
+
+<div class="input-group">
+  <input bind:value={email} type="email" placeholder="Email" />
+  {#if email}
+    {#if isValid}
+      <CircleCheck size={20} color="green" />
+    {:else}
+      <CircleAlert size={20} color="red" />
+    {/if}
+  {/if}
+</div>
+```
+
+### Navigation with Active States
+
+```svelte
+<script>
+  import { House, Settings, User } from '@jis3r/icons';
+  import { page } from '$app/stores';
+  
+  function isActive(path: string) {
+    return $page.url.pathname === path;
+  }
+</script>
+
+<nav>
+  <a href="/" class:active={isActive('/')}>
+    <House size={20} animate={isActive('/')} />
+    <span>Home</span>
+  </a>
+  <a href="/settings" class:active={isActive('/settings')}>
+    <Settings size={20} animate={isActive('/settings')} />
+    <span>Settings</span>
+  </a>
+</nav>
+```
+
+## Troubleshooting
+
+### Icons not animating
+
+Ensure you're using Svelte 5's runes syntax:
+
+```svelte
+<!-- Correct ✓ -->
+<script>
+  let animate = $state(false);
+</script>
+
+<!-- Incorrect ✗ -->
+<script>
+  let animate = false;
+</script>
+```
+
+### Type errors
+
+Make sure your `tsconfig.json` includes proper Svelte 5 types:
+
+```json tsconfig.json
+{
+  "extends": "./.svelte-kit/tsconfig.json",
+  "compilerOptions": {
+    "types": ["svelte"]
+  }
+}
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="shadcn-svelte Integration" icon="puzzle-piece" href="/integration/shadcn-svelte">
+    Learn about registry-based installation
+  </Card>
+  <Card title="TypeScript Support" icon="code" href="/integration/typescript">
+    Explore type definitions and type safety
+  </Card>
+</CardGroup>

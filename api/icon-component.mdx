@@ -1,0 +1,211 @@
+---
+title: Icon Component
+description: Understanding the structure and behavior of Moving Icons components
+icon: box
+---
+
+## Component Structure
+
+All Moving Icons follow a consistent Svelte component pattern. Each icon is a self-contained component with built-in animation capabilities.
+
+### Example Component
+
+Here's the structure of the `accessibility.svelte` component, which is representative of all icons in the library:
+
+```svelte
+<script lang="ts">
+  import type { IconProps } from './types.js';
+
+  let {
+    color = 'currentColor',
+    size = 24,
+    strokeWidth = 2,
+    animate = false,
+    class: className = ''
+  }: IconProps = $props();
+
+  function handleMouseEnter() {
+    if (animate) return;
+    animate = true;
+    setTimeout(() => {
+      animate = false;
+    }, 1400);
+  }
+</script>
+
+<div class={className} aria-label="accessibility" role="img" onmouseenter={handleMouseEnter}>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke={color}
+    stroke-width={strokeWidth}
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="accessibility-icon"
+    class:animate
+  >
+    <!-- SVG paths and shapes -->
+  </svg>
+</div>
+```
+
+## Component Behavior
+
+### Animation Mechanism
+
+Each icon includes a `handleMouseEnter` function that controls the animation behavior:
+
+<CodeGroup>
+```javascript Animation Handler
+function handleMouseEnter() {
+  if (animate) return;  // Prevent re-triggering during animation
+  animate = true;
+  setTimeout(() => {
+    animate = false;
+  }, 1400);              // Animation duration
+}
+```
+</CodeGroup>
+
+**How it works:**
+
+1. **Default Behavior**: On mouse enter, the icon automatically animates
+2. **Animation Lock**: Prevents retriggering while an animation is in progress
+3. **Auto-Reset**: Returns to the default state after 1400ms
+4. **Controlled Mode**: When `animate` prop is `true`, automatic animations are disabled
+
+### Animation Modes
+
+<CardGroup cols={2}>
+  <Card title="Automatic" icon="wand-magic-sparkles">
+    Default mode - icons animate on hover
+  </Card>
+  <Card title="Controlled" icon="sliders">
+    Set `animate={true}` to control animations programmatically
+  </Card>
+</CardGroup>
+
+<Tabs>
+  <Tab title="Automatic Mode">
+    ```svelte
+    <Accessibility />
+    <!-- Animates automatically on hover -->
+    ```
+  </Tab>
+  <Tab title="Controlled Mode">
+    ```svelte
+    <script>
+      let isAnimating = $state(false);
+
+      function triggerAnimation() {
+        isAnimating = true;
+        setTimeout(() => isAnimating = false, 1400);
+      }
+    </script>
+
+    <Accessibility animate={isAnimating} />
+    <button onclick={triggerAnimation}>Animate</button>
+    ```
+  </Tab>
+</Tabs>
+
+## SVG Structure
+
+### Standard Attributes
+
+All icons use consistent SVG attributes:
+
+- **xmlns**: `http://www.w3.org/2000/svg`
+- **viewBox**: `0 0 24 24` (24x24 unit grid)
+- **fill**: `none` (stroke-based icons)
+- **stroke**: Controlled by `color` prop
+- **stroke-width**: Controlled by `strokeWidth` prop
+- **stroke-linecap**: `round`
+- **stroke-linejoin**: `round`
+
+### Dynamic Classes
+
+```svelte
+<svg
+  class="accessibility-icon"
+  class:animate
+>
+```
+
+The `class:animate` directive conditionally applies the `animate` class, which triggers CSS animations defined in the component's `<style>` block.
+
+## Accessibility Features
+
+Every icon includes built-in accessibility attributes:
+
+<ParamField path="aria-label" type="string">
+  Provides a descriptive label for screen readers (e.g., "accessibility")
+</ParamField>
+
+<ParamField path="role" type="string" default="img">
+  Identifies the element as an image for assistive technologies
+</ParamField>
+
+### Example Usage
+
+```svelte
+<div class={className} aria-label="accessibility" role="img">
+  <!-- Icon content -->
+</div>
+```
+
+<Note>
+  Each icon's `aria-label` corresponds to its icon name, providing semantic meaning to screen reader users.
+</Note>
+
+## Wrapper Element
+
+All icons are wrapped in a `<div>` element with `display: inline-block`, making them easy to integrate into text flows and layouts:
+
+```css
+div {
+  display: inline-block;
+}
+```
+
+This allows icons to:
+- Sit inline with text
+- Accept custom classes via the `class` prop
+- Maintain proper spacing and alignment
+
+## CSS Animations
+
+Each icon includes custom CSS animations in its `<style>` block. These animations are triggered when the `animate` class is applied:
+
+```css
+.accessibility-icon.animate .accessibility-group1 {
+  animation: group1Rotate 0.8s ease-in-out;
+}
+
+@keyframes group1Rotate {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(5deg); }
+  50% { transform: rotate(-5deg); }
+  100% { transform: rotate(0deg); }
+}
+```
+
+<Info>
+  Animation styles are unique to each icon, creating distinctive motion patterns that enhance the icon's meaning.
+</Info>
+
+## Consistency
+
+<Check>All 530+ icons follow this exact same pattern</Check>
+
+Key consistency features:
+- Same prop structure
+- Same animation mechanism
+- Same accessibility attributes
+- Same SVG attributes
+- Same wrapper structure
+
+This makes the library predictable and easy to use across your entire application.

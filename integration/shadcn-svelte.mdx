@@ -1,0 +1,425 @@
+---
+title: 'shadcn-svelte Registry Integration'
+description: 'Install icons via the shadcn-svelte registry for local customization and control'
+---
+
+Moving Icons integrates seamlessly with the shadcn-svelte registry, allowing you to add icons directly to your project as source files. This approach gives you complete control over the icon components and makes customization easy.
+
+## What is Registry Installation?
+
+The shadcn-svelte registry allows you to install components (including Moving Icons) directly into your project's source code rather than importing them from `node_modules`. This means:
+
+- Icons are copied as `.svelte` files into your project
+- You can modify and customize them freely
+- No dependency on the `@jis3r/icons` package
+- Full ownership of the code
+
+<Info>
+  Registry installation is perfect for projects that need custom icon variants or want to avoid external dependencies.
+</Info>
+
+## Prerequisites
+
+<Steps>
+  <Step title="Install shadcn-svelte">
+    Ensure you have shadcn-svelte installed in your project:
+
+    ```bash
+    npx shadcn-svelte@latest init
+    ```
+
+    Follow the prompts to configure shadcn-svelte for your project.
+  </Step>
+
+  <Step title="Verify project setup">
+    Check that your project has the required structure:
+
+    ```
+    src/
+    ├── lib/
+    │   └── components/
+    └── routes/
+    ```
+  </Step>
+</Steps>
+
+## Installing Icons
+
+### Command Format
+
+The registry installation uses the following command structure:
+
+```bash
+npx shadcn-svelte@latest add https://movingicons.dev/r/[icon-name]
+```
+
+### Installation Examples
+
+<CodeGroup>
+
+```bash Single Icon
+# Install the Activity icon
+npx shadcn-svelte@latest add https://movingicons.dev/r/activity
+```
+
+```bash Multiple Icons
+# Install multiple icons at once
+npx shadcn-svelte@latest add https://movingicons.dev/r/activity
+npx shadcn-svelte@latest add https://movingicons.dev/r/star
+npx shadcn-svelte@latest add https://movingicons.dev/r/bell
+```
+
+```bash From Website
+# Copy the command directly from the icon page on movingicons.dev
+# Each icon has a "Copy command" button
+npx shadcn-svelte@latest add https://movingicons.dev/r/rocket
+```
+
+</CodeGroup>
+
+<Tip>
+  Visit [movingicons.dev/icons](https://movingicons.dev/icons) and click the registry icon button on any icon to copy the installation command.
+</Tip>
+
+## Installation Location
+
+When you install an icon via the registry, it's added to your project in the following directory:
+
+```
+src/lib/components/movingicons/
+```
+
+### Directory Structure
+
+After installing a few icons, your structure will look like this:
+
+```
+src/
+├── lib/
+│   └── components/
+│       └── movingicons/
+│           ├── activity.svelte
+│           ├── star.svelte
+│           ├── bell.svelte
+│           └── types.ts
+└── routes/
+```
+
+<Info>
+  The `types.ts` file is automatically created with the first icon installation and contains the `IconProps` interface.
+</Info>
+
+## Using Registry-Installed Icons
+
+Import icons from your local components directory:
+
+```svelte +page.svelte
+<script>
+  import Activity from '$lib/components/movingicons/activity.svelte';
+  import Star from '$lib/components/movingicons/star.svelte';
+  import Bell from '$lib/components/movingicons/bell.svelte';
+</script>
+
+<div class="icons">
+  <Activity size={24} />
+  <Star size={24} color="gold" />
+  <Bell size={24} />
+</div>
+```
+
+## Benefits of Registry Installation
+
+<Steps>
+  <Step title="Full customization">
+    Modify icon animations, styles, and behavior directly:
+
+    ```svelte src/lib/components/movingicons/activity.svelte
+    <script lang="ts">
+      import type { IconProps } from './types.js';
+
+      let {
+        color = 'currentColor',
+        size = 24,
+        strokeWidth = 2,
+        animate = false,
+        class: className = ''
+      }: IconProps = $props();
+
+      // Add custom logic
+      let animationDuration = 800; // Customize duration
+
+      function handleMouseEnter() {
+        if (animate) return;
+        animate = true;
+        setTimeout(() => {
+          animate = false;
+        }, animationDuration); // Use custom duration
+      }
+    </script>
+    ```
+  </Step>
+
+  <Step title="No external dependencies">
+    Icons are part of your codebase, eliminating the need for the `@jis3r/icons` package:
+
+    ```json package.json
+    {
+      "dependencies": {
+        // No @jis3r/icons needed!
+        "svelte": "^5.0.0"
+      }
+    }
+    ```
+  </Step>
+
+  <Step title="Version control">
+    Icons are tracked in your repository, giving you:
+    - Complete history of changes
+    - Ability to customize per project
+    - No breaking changes from package updates
+  </Step>
+
+  <Step title="Easy debugging">
+    Since icons are in your source tree, you can:
+    - Add console logs
+    - Modify animations
+    - Debug directly in your IDE
+  </Step>
+</Steps>
+
+## Customization Examples
+
+### Custom Animation Duration
+
+```svelte src/lib/components/movingicons/star.svelte
+<script lang="ts">
+  import type { IconProps } from './types.js';
+
+  let {
+    color = 'gold', // Custom default color
+    size = 24,
+    strokeWidth = 2,
+    animate = false,
+    class: className = ''
+  }: IconProps = $props();
+
+  function handleMouseEnter() {
+    if (animate) return;
+    animate = true;
+    setTimeout(() => {
+      animate = false;
+    }, 1200); // Slower animation
+  }
+</script>
+```
+
+### Add Custom Props
+
+```svelte src/lib/components/movingicons/bell.svelte
+<script lang="ts">
+  import type { IconProps } from './types.js';
+
+  interface BellProps extends IconProps {
+    badge?: number; // Add badge count
+  }
+
+  let {
+    color = 'currentColor',
+    size = 24,
+    strokeWidth = 2,
+    animate = false,
+    badge = 0,
+    class: className = ''
+  }: BellProps = $props();
+
+  function handleMouseEnter() {
+    if (animate) return;
+    animate = true;
+    setTimeout(() => {
+      animate = false;
+    }, 600);
+  }
+</script>
+
+<div class="bell-wrapper {className}" aria-label="bell" role="img" onmouseenter={handleMouseEnter}>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke={color}
+    stroke-width={strokeWidth}
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class:animate
+  >
+    <!-- SVG paths -->
+  </svg>
+  {#if badge > 0}
+    <span class="badge">{badge}</span>
+  {/if}
+</div>
+
+<style>
+  .bell-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 10px;
+    font-weight: bold;
+  }
+</style>
+```
+
+Usage:
+
+```svelte
+<script>
+  import Bell from '$lib/components/movingicons/bell.svelte';
+</script>
+
+<Bell size={24} badge={5} />
+```
+
+### Change Default Behavior
+
+```svelte src/lib/components/movingicons/heart.svelte
+<script lang="ts">
+  import type { IconProps } from './types.js';
+
+  let {
+    color = 'currentColor',
+    size = 24,
+    strokeWidth = 2,
+    animate = false,
+    class: className = ''
+  }: IconProps = $props();
+
+  // Auto-animate on mount
+  import { onMount } from 'svelte';
+  
+  onMount(() => {
+    animate = true;
+    setTimeout(() => {
+      animate = false;
+    }, 600);
+  });
+
+  function handleMouseEnter() {
+    if (animate) return;
+    animate = true;
+    setTimeout(() => {
+      animate = false;
+    }, 600);
+  }
+</script>
+```
+
+## Workflow Comparison
+
+<CardGroup cols={2}>
+  <Card title="Registry Installation" icon="download">
+    **Best for:**
+    - Custom icon variants
+    - No external dependencies
+    - Direct source control
+    - Heavy customization
+
+    **Trade-offs:**
+    - Manual updates
+    - Larger repo size
+    - Icon-by-icon installation
+  </Card>
+  
+  <Card title="NPM Installation" icon="package">
+    **Best for:**
+    - Quick setup
+    - Many icons needed
+    - Automatic updates
+    - Standard use cases
+
+    **Trade-offs:**
+    - External dependency
+    - Less customization
+    - Package updates needed
+  </Card>
+</CardGroup>
+
+## Combining Both Approaches
+
+You can use both installation methods in the same project:
+
+```svelte +page.svelte
+<script>
+  // Registry-installed (customized)
+  import Activity from '$lib/components/movingicons/activity.svelte';
+  import Star from '$lib/components/movingicons/star.svelte';
+  
+  // NPM-installed (standard)
+  import { Bell, Settings, User } from '@jis3r/icons';
+</script>
+
+<div>
+  <!-- Custom variants -->
+  <Activity size={24} />
+  <Star size={24} />
+  
+  <!-- Standard icons -->
+  <Bell size={20} />
+  <Settings size={20} />
+  <User size={20} />
+</div>
+```
+
+<Tip>
+  Use registry installation for icons you want to customize, and NPM installation for standard icons you use frequently.
+</Tip>
+
+## Best Practices
+
+1. **Create a wrapper component**: Wrap registry icons in a shared component for consistent behavior
+
+2. **Document customizations**: Add comments explaining why you modified an icon
+
+3. **Version your changes**: Commit customized icons to version control with clear commit messages
+
+4. **Create presets**: Build a library of customized icon variants for your design system
+
+5. **Keep types updated**: If you extend `IconProps`, update the `types.ts` file accordingly
+
+## Updating Icons
+
+To update a registry-installed icon to the latest version:
+
+```bash
+# Remove the old file
+rm src/lib/components/movingicons/activity.svelte
+
+# Reinstall from registry
+npx shadcn-svelte@latest add https://movingicons.dev/r/activity
+```
+
+<Warning>
+  Re-installing an icon will overwrite any customizations. Make sure to back up your changes first!
+</Warning>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="TypeScript Integration" icon="code" href="/integration/typescript">
+    Learn about type safety and IconProps
+  </Card>
+  <Card title="Advanced Patterns" icon="paintbrush" href="/usage/advanced-patterns">
+    Explore advanced customization techniques
+  </Card>
+</CardGroup>

@@ -1,0 +1,196 @@
+---
+title: 'Installation'
+description: 'Install Moving Icons in your Svelte project using npm, shadcn-svelte registry, or direct download'
+keywords: ['install', 'npm', 'shadcn-svelte', 'setup', 'svelte 5']
+---
+
+# Installation
+
+Moving Icons offers three flexible installation methods to fit your workflow. Choose the approach that works best for your project.
+
+## Prerequisites
+
+Before installing, ensure you have:
+
+- **Svelte 5.0.0 or higher** - Moving Icons is built exclusively for Svelte 5
+- **Node.js and npm** (or yarn/pnpm) installed on your system
+- A SvelteKit or Svelte project initialized
+
+<Warning>
+Moving Icons requires Svelte 5. It will not work with Svelte 4 or earlier versions.
+</Warning>
+
+## Method 1: Install via npm
+
+The npm package gives you access to the complete icon library with maximum flexibility and tree-shaking support.
+
+<Steps>
+  <Step title="Install the package">
+    Install `@jis3r/icons` using your preferred package manager:
+
+    <CodeGroup>
+    ```bash npm
+    npm i @jis3r/icons
+    ```
+
+    ```bash yarn
+    yarn add @jis3r/icons
+    ```
+
+    ```bash pnpm
+    pnpm add @jis3r/icons
+    ```
+    </CodeGroup>
+  </Step>
+
+  <Step title="Verify installation">
+    Test the installation by importing an icon in your Svelte component:
+
+    ```svelte
+    <script>
+      import { Activity } from '@jis3r/icons';
+    </script>
+
+    <Activity size={24} />
+    ```
+
+    If the icon renders correctly, you're all set!
+  </Step>
+</Steps>
+
+<Tip>
+The npm package is fully tree-shakeable. Your bundler will only include the icons you actually import, keeping your production bundle size minimal.
+</Tip>
+
+## Method 2: shadcn-svelte Registry
+
+The shadcn-svelte registry allows you to add individual icon components directly to your project's source code. Icons are copied into your `src/lib/components/movingicons` directory, giving you full control over the code.
+
+<Steps>
+  <Step title="Ensure shadcn-svelte is installed">
+    If you haven't already set up shadcn-svelte, install it first:
+
+    ```bash
+    npx shadcn-svelte@latest init
+    ```
+
+    Follow the prompts to configure shadcn-svelte for your project.
+  </Step>
+
+  <Step title="Add icons from the registry">
+    Visit [movingicons.dev/icons](https://movingicons.dev/icons) and copy the CLI command for any icon you want to add:
+
+    ```bash
+    npx shadcn-svelte@latest add https://movingicons.dev/r/activity
+    ```
+
+    Replace `activity` with any icon name. The icon component will be added to `src/lib/components/movingicons/`.
+  </Step>
+
+  <Step title="Import and use the icon">
+    Import the icon from your local components directory:
+
+    ```svelte
+    <script>
+      import Activity from '$lib/components/movingicons/activity.svelte';
+    </script>
+
+    <Activity size={24} />
+    ```
+  </Step>
+</Steps>
+
+<Note>
+This method gives you full ownership of the icon code. You can modify animations, styles, or behavior directly in your project if needed.
+</Note>
+
+## Method 3: Copy from Website
+
+For quick prototyping or one-off icon usage, you can copy icon components directly from the Moving Icons website.
+
+<Steps>
+  <Step title="Browse the icon library">
+    Visit the [icons page](https://movingicons.dev/icons) to explore all available icons.
+  </Step>
+
+  <Step title="Copy the icon component">
+    Click on any icon to view its details, then copy the complete Svelte component code.
+  </Step>
+
+  <Step title="Paste into your project">
+    Create a new `.svelte` file in your project (e.g., `src/lib/components/Activity.svelte`) and paste the icon code.
+  </Step>
+
+  <Step title="Import and use">
+    Import the icon component like any other Svelte component:
+
+    ```svelte
+    <script>
+      import Activity from '$lib/components/Activity.svelte';
+    </script>
+
+    <Activity size={24} />
+    ```
+  </Step>
+</Steps>
+
+<Info>
+This method is perfect for trying out Moving Icons before committing to a full installation, or when you only need a handful of icons.
+</Info>
+
+## Choosing the Right Method
+
+Here's a quick comparison to help you decide:
+
+| Method | Best For | Pros | Cons |
+|--------|----------|------|------|
+| **npm Package** | Most projects | Tree-shakeable, easy updates, full TypeScript support | Adds dependency to package.json |
+| **shadcn Registry** | Component-based projects | Full code ownership, easy customization | Manual updates, more files |
+| **Copy from Website** | Quick prototypes | No dependencies, zero setup | Manual updates, potential duplication |
+
+<Tip>
+For production projects, we recommend the **npm package** method. It provides the best developer experience with automatic updates and optimal bundle sizes.
+</Tip>
+
+## Verification
+
+To verify your installation is working correctly, create a test component:
+
+```svelte test-icons.svelte
+<script>
+  import { Activity, Star, Heart, Zap } from '@jis3r/icons';
+</script>
+
+<div class="flex gap-4 p-4">
+  <Activity size={32} color="orange" />
+  <Star size={32} color="gold" />
+  <Heart size={32} color="red" />
+  <Zap size={32} color="purple" />
+</div>
+```
+
+Hover over the icons - they should animate smoothly!
+
+## TypeScript Support
+
+Moving Icons includes full TypeScript definitions out of the box. No additional `@types` packages are needed.
+
+```typescript
+import type { ComponentProps } from 'svelte';
+import { Activity } from '@jis3r/icons';
+
+type ActivityProps = ComponentProps<Activity>;
+```
+
+## Next Steps
+
+Now that Moving Icons is installed, learn how to use them effectively:
+
+<CardGroup cols={2}>
+  <Card title="Quick Start" icon="zap" href="/quickstart">
+    Learn the basics with practical examples
+  </Card>
+  <Card title="Basic Usage" icon="book" href="/usage/basic-usage">
+    Understand all available props and options
+  </Card>
+</CardGroup>
