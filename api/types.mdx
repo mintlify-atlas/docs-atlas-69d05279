@@ -24,7 +24,7 @@ export interface IconProps {
 ```
 
 ```typescript Import
-import type { IconProps } from 'moving-icons';
+import type { IconProps } from '@jis3r/icons';
 ```
 </CodeGroup>
 
@@ -64,7 +64,7 @@ import type { IconProps } from 'moving-icons';
 
 <CodeGroup>
 ```typescript Type Configuration Object
-import type { IconProps } from 'moving-icons';
+import type { IconProps } from '@jis3r/icons';
 
 const iconConfig: IconProps = {
   color: '#3b82f6',
@@ -76,8 +76,8 @@ const iconConfig: IconProps = {
 ```
 
 ```typescript Function Parameter
-import type { IconProps } from 'moving-icons';
-import { Heart } from 'moving-icons';
+import type { IconProps } from '@jis3r/icons';
+import { Heart } from '@jis3r/icons';
 
 function renderIcon(props: IconProps) {
   return <Heart {...props} />;
@@ -85,7 +85,7 @@ function renderIcon(props: IconProps) {
 ```
 
 ```typescript Component Props
-import type { IconProps } from 'moving-icons';
+import type { IconProps } from '@jis3r/icons';
 
 interface ButtonProps {
   label: string;
@@ -103,7 +103,7 @@ function IconButton({ label, iconProps }: ButtonProps) {
 ```
 
 ```typescript Partial Props
-import type { IconProps } from 'moving-icons';
+import type { IconProps } from '@jis3r/icons';
 
 const defaultTheme: Partial<IconProps> = {
   color: 'var(--primary)',
@@ -135,7 +135,7 @@ export type IconName =
 ```
 
 ```typescript Import
-import type { IconName } from 'moving-icons';
+import type { IconName } from '@jis3r/icons';
 ```
 </CodeGroup>
 
@@ -143,7 +143,7 @@ import type { IconName } from 'moving-icons';
 
 <CodeGroup>
 ```typescript Type-Safe Icon Selection
-import type { IconName } from 'moving-icons';
+import type { IconName } from '@jis3r/icons';
 
 function getIconName(action: string): IconName {
   switch (action) {
@@ -160,7 +160,7 @@ function getIconName(action: string): IconName {
 ```
 
 ```typescript Component Props
-import type { IconName } from 'moving-icons';
+import type { IconName } from '@jis3r/icons';
 
 interface StatusProps {
   status: 'success' | 'error' | 'warning';
@@ -174,7 +174,7 @@ function StatusMessage({ status, iconName }: StatusProps) {
 ```
 
 ```typescript Array of Icons
-import type { IconName } from 'moving-icons';
+import type { IconName } from '@jis3r/icons';
 
 const socialIcons: IconName[] = [
   'heart',
@@ -185,7 +185,7 @@ const socialIcons: IconName[] = [
 ```
 
 ```typescript Dynamic Icon Lookup
-import type { IconName } from 'moving-icons';
+import type { IconName } from '@jis3r/icons';
 
 const iconMap: Record<string, IconName> = {
   home: 'house',
@@ -204,18 +204,18 @@ const iconMap: Record<string, IconName> = {
 
 <CodeGroup>
 ```typescript Import Types Only
-import type { IconProps, IconName } from 'moving-icons';
+import type { IconProps, IconName } from '@jis3r/icons';
 ```
 
 ```typescript Import Components and Types
-import { Heart, Star } from 'moving-icons';
-import type { IconProps, IconName } from 'moving-icons';
+import { Heart, Star } from '@jis3r/icons';
+import type { IconProps, IconName } from '@jis3r/icons';
 ```
 
 ```typescript Svelte Component Import
 <script lang="ts">
-  import { Accessibility } from 'moving-icons';
-  import type { IconProps } from 'moving-icons';
+  import { Accessibility } from '@jis3r/icons';
+  import type { IconProps } from '@jis3r/icons';
 
   let props: IconProps = {
     color: '#3b82f6',
@@ -233,7 +233,7 @@ Create custom types based on the exported types:
 
 <CodeGroup>
 ```typescript Required Props
-import type { IconProps } from 'moving-icons';
+import type { IconProps } from '@jis3r/icons';
 
 type RequiredIconProps = Required<IconProps>;
 
@@ -247,7 +247,7 @@ const fullConfig: RequiredIconProps = {
 ```
 
 ```typescript Pick Specific Props
-import type { IconProps } from 'moving-icons';
+import type { IconProps } from '@jis3r/icons';
 
 type SizeAndColor = Pick<IconProps, 'size' | 'color'>;
 
@@ -258,7 +258,7 @@ const theme: SizeAndColor = {
 ```
 
 ```typescript Omit Props
-import type { IconProps } from 'moving-icons';
+import type { IconProps } from '@jis3r/icons';
 
 type StaticIconProps = Omit<IconProps, 'animate'>;
 
@@ -271,7 +271,7 @@ const staticConfig: StaticIconProps = {
 ```
 
 ```typescript Extend Props
-import type { IconProps } from 'moving-icons';
+import type { IconProps } from '@jis3r/icons';
 
 interface ExtendedIconProps extends IconProps {
   tooltip?: string;
@@ -291,8 +291,8 @@ const interactive: ExtendedIconProps = {
 <CodeGroup>
 ```typescript Svelte Component with Types
 <script lang="ts">
-  import { Heart, Star, ThumbsUp } from 'moving-icons';
-  import type { IconProps, IconName } from 'moving-icons';
+  import { Heart, Star, ThumbsUp } from '@jis3r/icons';
+  import type { IconProps, IconName } from '@jis3r/icons';
 
   interface IconButtonProps {
     icon: IconName;
@@ -325,8 +325,8 @@ const interactive: ExtendedIconProps = {
 ```
 
 ```typescript Type-Safe Icon Mapper
-import type { IconName } from 'moving-icons';
-import * as Icons from 'moving-icons';
+import type { IconName } from '@jis3r/icons';
+import * as Icons from '@jis3r/icons';
 
 type IconComponent = typeof Icons[keyof typeof Icons];
 
